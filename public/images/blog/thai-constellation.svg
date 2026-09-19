@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="thai-constellation">
+  <rect width="800" height="800" fill="#090b09"/>
+  <defs>
+    <radialGradient id="g-1" cx="48%" cy="38%" r="62%">
+      <stop offset="0" stop-color="#738f52"/>
+      <stop offset=".46" stop-color="#315d2d"/>
+      <stop offset="1" stop-color="#08140a"/>
+    </radialGradient>
+  </defs>
+  <g transform="translate(400 410) rotate(3)">
+    <ellipse cx="0" cy="-10" rx="202" ry="260" fill="url(#g-1)"/>
+    <path d="M0 -252 C 8 13 4 182 -6 242" fill="none" stroke="rgba(164,204,143,.28)" stroke-width="4"/>
+    <ellipse cx="-76" cy="-160" rx="28" ry="11" transform="rotate(-18)" fill="#090b09" opacity=".94"/>
+    <ellipse cx="85" cy="-140" rx="30" ry="12" transform="rotate(16)" fill="#090b09" opacity=".94"/>
+    <ellipse cx="-110" cy="-34" rx="24" ry="10" transform="rotate(-12)" fill="#090b09" opacity=".94"/>
+    <ellipse cx="110" cy="-20" rx="26" ry="11" transform="rotate(14)" fill="#090b09" opacity=".94"/>
+    <ellipse cx="-60" cy="80" rx="22" ry="10" transform="rotate(-8)" fill="#090b09" opacity=".94"/>
+    <ellipse cx="70" cy="100" rx="23" ry="10" transform="rotate(10)" fill="#090b09" opacity=".94"/>
+  </g>
+</svg>
