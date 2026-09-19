@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { FloatingSocialBar } from "@/components/floating-social-bar";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { routing } from "@/i18n/routing";
 import { fontVariables } from "@/lib/fonts";
@@ -88,6 +89,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale} className={`${fontVariables} h-full dark antialiased`}>
       <body className="min-h-full bg-background font-sans text-foreground">
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <FloatingSocialBar />
           <LocaleSwitcher />
           {children}
         </NextIntlClientProvider>
