@@ -1,5 +1,11 @@
 import type { ComponentType, SVGProps } from "react";
+import Image from "next/image";
+import { Link } from "@/i18n/navigation";
+import { SITE_NAME } from "@/lib/site";
 import { cn } from "@/lib/utils";
+
+const AVATAR_SRC = "/images/avatar.webp";
+const AVATAR_LABEL = SITE_NAME;
 
 type IconProps = SVGProps<SVGSVGElement>;
 
@@ -130,33 +136,50 @@ function FloatingSocialBar({
         className,
       )}
     >
-      <ul className="group/social pointer-events-auto m-0 flex list-none flex-col p-0 shadow-[2px_3px_10px_rgba(0,0,0,0.28)]">
-        {links.map((link) => {
-          const Icon = link.icon;
+      <div className="pointer-events-auto flex flex-col">
+        <Link
+          href="/"
+          aria-label={AVATAR_LABEL}
+          className="mb-2 block size-12 overflow-hidden bg-black shadow-[2px_3px_10px_rgba(0,0,0,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+        >
+          <Image
+            src={AVATAR_SRC}
+            alt=""
+            width={48}
+            height={48}
+            className="size-12 object-cover"
+            priority
+          />
+        </Link>
 
-          return (
-            <li key={link.name} className="m-0 p-0">
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={link.name}
-                className="grid h-12 grid-cols-[3rem_0fr] text-white transition-[grid-template-columns] duration-300 ease-out group-hover/social:grid-cols-[3rem_1fr] focus-visible:grid-cols-[3rem_1fr] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
-                style={{ backgroundColor: link.color }}
-              >
-                <span className="flex size-12 shrink-0 items-center justify-center">
-                  <Icon className="size-5" />
-                </span>
-                <span className="min-w-0 overflow-hidden">
-                  <span className="flex h-full items-center pr-4 text-[0.7rem] font-bold tracking-[0.14em] whitespace-nowrap uppercase">
-                    {link.name}
+        <ul className="group/social m-0 flex list-none flex-col p-0 shadow-[2px_3px_10px_rgba(0,0,0,0.28)]">
+          {links.map((link) => {
+            const Icon = link.icon;
+
+            return (
+              <li key={link.name} className="m-0 p-0">
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.name}
+                  className="grid h-12 grid-cols-[3rem_0fr] text-white transition-[grid-template-columns] duration-300 ease-out group-hover/social:grid-cols-[3rem_1fr] focus-visible:grid-cols-[3rem_1fr] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                  style={{ backgroundColor: link.color }}
+                >
+                  <span className="flex size-12 shrink-0 items-center justify-center">
+                    <Icon className="size-5" />
                   </span>
-                </span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+                  <span className="min-w-0 overflow-hidden">
+                    <span className="flex h-full items-center pr-4 text-[0.7rem] font-bold tracking-[0.14em] whitespace-nowrap uppercase">
+                      {link.name}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </nav>
   );
 }
