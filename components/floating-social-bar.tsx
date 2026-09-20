@@ -17,10 +17,18 @@ function FacebookIcon(props: IconProps) {
   );
 }
 
-function TwitterIcon(props: IconProps) {
+function TikTokIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.27 4.27 0 0 0 1.88-2.36 8.54 8.54 0 0 1-2.7 1.03 4.26 4.26 0 0 0-7.26 3.88A12.1 12.1 0 0 1 3.15 4.9a4.25 4.25 0 0 0 1.32 5.68 4.22 4.22 0 0 1-1.93-.53v.05a4.26 4.26 0 0 0 3.42 4.18 4.3 4.3 0 0 1-1.92.07 4.27 4.27 0 0 0 3.98 2.96A8.55 8.55 0 0 1 2 18.58 12.07 12.07 0 0 0 8.56 20.5c7.88 0 12.2-6.53 12.2-12.2v-.56A8.7 8.7 0 0 0 22.46 6Z" />
+      <path d="M19.6 7.8a6.5 6.5 0 0 1-3.7-1.2v7.3a5.7 5.7 0 1 1-5.7-5.7c.3 0 .6 0 .9.1v2.9a2.8 2.8 0 1 0 2 2.7V2.5h2.8a3.7 3.7 0 0 0 3.7 3.7v1.6Z" />
+    </svg>
+  );
+}
+
+function YouTubeIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.91C18.05 4.9 12 4.9 12 4.9s-6.05 0-7.7.39A2.7 2.7 0 0 0 2.4 7.2 28.2 28.2 0 0 0 2 12a28.2 28.2 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.91c1.65.39 7.7.39 7.7.39s6.05 0 7.7-.39a2.7 2.7 0 0 0 1.9-1.91A28.2 28.2 0 0 0 22 12a28.2 28.2 0 0 0-.4-4.8ZM10.2 15.05V8.95L15.5 12l-5.3 3.05Z" />
     </svg>
   );
 }
@@ -39,6 +47,14 @@ function InstagramIcon(props: IconProps) {
       />
       <circle cx="12" cy="12" r="4.1" stroke="currentColor" strokeWidth="1.8" />
       <circle cx="17.35" cy="6.65" r="1.15" fill="currentColor" />
+    </svg>
+  );
+}
+
+function XIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M17.6 3.5h2.7l-5.9 6.75L21.7 20.5h-5.2l-4.07-5.32L7.8 20.5H5.1l6.32-7.22L2.4 3.5h5.33l3.68 4.87L17.6 3.5Zm-.95 15.27h1.5L7.5 5.13H5.9l10.75 13.64Z" />
     </svg>
   );
 }
@@ -63,14 +79,6 @@ function GitHubIcon(props: IconProps) {
   );
 }
 
-function YouTubeIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.91C18.05 4.9 12 4.9 12 4.9s-6.05 0-7.7.39A2.7 2.7 0 0 0 2.4 7.2 28.2 28.2 0 0 0 2 12a28.2 28.2 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.91c1.65.39 7.7.39 7.7.39s6.05 0 7.7-.39a2.7 2.7 0 0 0 1.9-1.91A28.2 28.2 0 0 0 22 12a28.2 28.2 0 0 0-.4-4.8ZM10.2 15.05V8.95L15.5 12l-5.3 3.05Z" />
-    </svg>
-  );
-}
-
 export type SocialLink = {
   name: string;
   href: string;
@@ -81,39 +89,45 @@ export type SocialLink = {
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: "Facebook",
-    href: "https://facebook.com/devtrongcay",
+    href: "https://www.facebook.com/viet.nguyen.555528",
     color: "#3b5998",
     icon: FacebookIcon,
   },
   {
-    name: "Twitter",
-    href: "https://twitter.com/devtrongcay",
-    color: "#1da1f2",
-    icon: TwitterIcon,
+    name: "TikTok",
+    href: "https://www.tiktok.com/@viet.nguyen.hoang49",
+    color: "#010101",
+    icon: TikTokIcon,
+  },
+  {
+    name: "YouTube",
+    href: "https://www.youtube.com/@vietcode98",
+    color: "#ff0000",
+    icon: YouTubeIcon,
   },
   {
     name: "Instagram",
-    href: "https://instagram.com/devtrongcay",
+    href: "https://www.instagram.com/nguyenviet4711/",
     color: "#e1306c",
     icon: InstagramIcon,
   },
   {
+    name: "X",
+    href: "https://x.com/VietNguyenwzaa",
+    color: "#000000",
+    icon: XIcon,
+  },
+  {
     name: "LinkedIn",
-    href: "https://linkedin.com/company/devtrongcay",
+    href: "https://www.linkedin.com/in/viet-nguyen-hoang-077007437/",
     color: "#0077b5",
     icon: LinkedInIcon,
   },
   {
     name: "GitHub",
-    href: "https://github.com/devtrongcay",
+    href: "https://github.com/danielnguyen5070",
     color: "#333333",
     icon: GitHubIcon,
-  },
-  {
-    name: "YouTube",
-    href: "https://youtube.com/@devtrongcay",
-    color: "#ff0000",
-    icon: YouTubeIcon,
   },
 ];
 

@@ -5,6 +5,20 @@ export function getSiteUrl() {
   return process.env.NEXT_PUBLIC_SITE_URL ?? "https://devtrongcay.com";
 }
 
+/** Block search engines on staging/preview. Set NEXT_PUBLIC_NO_INDEX=false in production. */
+export function isNoIndexSite() {
+  const flag = process.env.NEXT_PUBLIC_NO_INDEX?.trim().toLowerCase();
+  if (flag === "true" || flag === "1") return true;
+  if (flag === "false" || flag === "0") return false;
+
+  const vercelEnv = process.env.VERCEL_ENV;
+  if (vercelEnv) {
+    return vercelEnv !== "production";
+  }
+
+  return process.env.NODE_ENV !== "production";
+}
+
 export function absoluteUrl(path: string) {
   const base = getSiteUrl().replace(/\/$/, "");
   if (!path || path === "/") {

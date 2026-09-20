@@ -75,7 +75,7 @@ const posts = [
   {
     slug: "monstera-deliciosa",
     date: "2026-09-18",
-    coverImage: "/images/blog/monstera-deliciosa.svg",
+    coverImage: "/images/blog/green-on-green.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Monstera Deliciosa", en: "Monstera Deliciosa" },
     description: {
@@ -114,7 +114,7 @@ When internodes start to stretch, give it a moss pole or board. Mature leaves on
   {
     slug: "thai-constellation",
     date: "2026-09-17",
-    coverImage: "/images/blog/thai-constellation.svg",
+    coverImage: "/images/blog/thai-cons.webp",
     category: { vi: "Variegated", en: "Variegated" },
     title: { vi: "Thai Constellation", en: "Thai Constellation" },
     description: {
@@ -137,7 +137,7 @@ Water less than a green Deliciosa of the same size. Use an airy mix, keep it onl
   {
     slug: "albo-borsigiana",
     date: "2026-09-16",
-    coverImage: "/images/blog/albo-borsigiana.svg",
+    coverImage: "/images/blog/albo.webp",
     category: { vi: "Variegated", en: "Variegated" },
     title: { vi: "Albo Borsigiana", en: "Albo Borsigiana" },
     description: {
@@ -160,7 +160,7 @@ Skip heavy nitrogen. Even light matters more than aggressive feeding.`,
   {
     slug: "monstera-aurea",
     date: "2026-09-15",
-    coverImage: "/images/blog/monstera-aurea.svg",
+    coverImage: "/images/blog/aurea.webp",
     category: { vi: "Variegated", en: "Variegated" },
     title: { vi: "Monstera Aurea", en: "Monstera Aurea" },
     description: {
@@ -183,7 +183,7 @@ Use a fast mix, a pot that only just fits the roots, and wait to up-pot until th
   {
     slug: "monstera-mint",
     date: "2026-09-14",
-    coverImage: "/images/blog/monstera-mint.svg",
+    coverImage: "/images/blog/mint.webp",
     category: { vi: "Variegated", en: "Variegated" },
     title: { vi: "Monstera Mint", en: "Monstera Mint" },
     description: {
@@ -206,7 +206,7 @@ Strong indirect light all day is what keeps the mint layer. In shade, new leaves
   {
     slug: "monstera-adansonii",
     date: "2026-09-13",
-    coverImage: "/images/blog/monstera-adansonii.svg",
+    coverImage: "/images/blog/bulbasaur.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Adansonii", en: "Adansonii" },
     description: {
@@ -229,7 +229,7 @@ On a climb, leaves thicken and the holes settle. In a hanging pot, expect smalle
   {
     slug: "monstera-esqueleto",
     date: "2026-09-12",
-    coverImage: "/images/blog/monstera-esqueleto.svg",
+    coverImage: "/images/blog/white-monster.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Esqueleto", en: "Esqueleto" },
     description: {
@@ -252,7 +252,7 @@ Raise air humidity if the room is air-conditioned, but the rootball still needs 
   {
     slug: "monstera-obliqua",
     date: "2026-09-11",
-    coverImage: "/images/blog/monstera-obliqua.svg",
+    coverImage: "/images/blog/devil.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Obliqua", en: "Obliqua" },
     description: {
@@ -275,7 +275,7 @@ Never leave it soggy. One rotten node can end the plant. Look at the hole edges:
   {
     slug: "monstera-peru",
     date: "2026-09-10",
-    coverImage: "/images/blog/monstera-peru.svg",
+    coverImage: "/images/blog/green-snow.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Monstera Peru", en: "Monstera Peru" },
     description: {
@@ -298,7 +298,7 @@ Strong light keeps the texture. In shade the leaf flattens, internodes stretch, 
   {
     slug: "monstera-standleyana",
     date: "2026-09-09",
-    coverImage: "/images/blog/monstera-standleyana.svg",
+    coverImage: "/images/blog/vietciosa.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Standleyana", en: "Standleyana" },
     description: {
@@ -321,7 +321,7 @@ Moderate water, filtered light, and a stem pressed to a pole. It looks better tr
   {
     slug: "monstera-siltepecana",
     date: "2026-09-08",
-    coverImage: "/images/blog/monstera-siltepecana.svg",
+    coverImage: "/images/blog/shamrock-shake.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Siltepecana", en: "Siltepecana" },
     description: {
@@ -344,7 +344,7 @@ Do not panic when the silver fades. That is maturity, not a deficiency.`,
   {
     slug: "monstera-dubia",
     date: "2026-09-07",
-    coverImage: "/images/blog/monstera-dubia.svg",
+    coverImage: "/images/blog/form-unniiae.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Monstera Dubia", en: "Monstera Dubia" },
     description: {
@@ -367,7 +367,7 @@ As it matures, Dubia leaves the board and produces divided blades. Many growers 
   {
     slug: "monstera-pinnatipartita",
     date: "2026-09-06",
-    coverImage: "/images/blog/monstera-pinnatipartita.svg",
+    coverImage: "/images/blog/white-lava.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Pinnatipartita", en: "Pinnatipartita" },
     description: {
@@ -390,7 +390,7 @@ Once the lobes deepen, stop repotting. The plant is spending energy on the morph
   {
     slug: "monstera-lechleriana",
     date: "2026-09-05",
-    coverImage: "/images/blog/monstera-lechleriana.svg",
+    coverImage: "/images/blog/albo-half-moon.webp",
     category: { vi: "Giống cây", en: "Species" },
     title: { vi: "Lechleriana", en: "Lechleriana" },
     description: {
@@ -413,7 +413,7 @@ The blades are long, so they need room to turn. Do not pin the plant to a wall i
   {
     slug: "watering-monstera",
     date: "2026-09-04",
-    coverImage: "/images/blog/watering-monstera.svg",
+    coverImage: "/images/blog/oceana.webp",
     category: { vi: "Chăm sóc", en: "Care" },
     title: { vi: "Tưới nước", en: "Watering" },
     description: {
@@ -436,7 +436,7 @@ Growth season asks for more frequency than dark months. Variegated plants dry sl
   {
     slug: "monstera-light",
     date: "2026-09-03",
-    coverImage: "/images/blog/monstera-light.svg",
+    coverImage: "/images/blog/thai-cons-electro-light.webp",
     category: { vi: "Chăm sóc", en: "Care" },
     title: { vi: "Ánh sáng", en: "Light" },
     description: {
@@ -459,7 +459,7 @@ Variegated plants need more light than green ones to feed white tissue, but midd
   {
     slug: "monstera-soil",
     date: "2026-09-02",
-    coverImage: "/images/blog/monstera-soil.svg",
+    coverImage: "/images/blog/form-burle-marx-flame-8.webp",
     category: { vi: "Chăm sóc", en: "Care" },
     title: { vi: "Giá thể", en: "Soil Mix" },
     description: {
@@ -482,7 +482,7 @@ Up-pot when roots have circled, not because the plant is tall. A deeper, narrowe
   {
     slug: "fenestration",
     date: "2026-09-01",
-    coverImage: "/images/blog/fenestration.svg",
+    coverImage: "/images/blog/form-brazil-6.webp",
     category: { vi: "Sinh lý", en: "Growth" },
     title: { vi: "Cửa sổ lá", en: "Fenestration" },
     description: {
@@ -505,7 +505,7 @@ A leaf that has already hardened will not add windows. Only new leaves report cu
   {
     slug: "moss-pole",
     date: "2026-08-30",
-    coverImage: "/images/blog/moss-pole.svg",
+    coverImage: "/images/blog/form-sierrana.webp",
     category: { vi: "Chăm sóc", en: "Care" },
     title: { vi: "Cột rêu", en: "Moss Pole" },
     description: {
@@ -528,7 +528,7 @@ Wood and coco work too. What matters is a stable face and a plant you are not ro
   {
     slug: "yellow-leaves",
     date: "2026-08-28",
-    coverImage: "/images/blog/yellow-leaves.svg",
+    coverImage: "/images/blog/banana.webp",
     category: { vi: "Chẩn đoán", en: "Diagnosis" },
     title: { vi: "Lá vàng", en: "Yellow Leaves" },
     description: {
@@ -551,8 +551,6 @@ Read the roots too. A sour smell and black nodes mean rot — cut to healthy tis
 ];
 
 for (const [index, post] of posts.entries()) {
-  writeFileSync(join(coversDir, `${post.slug}.svg`), coverSvg(index, post.slug));
-
   for (const locale of ["vi", "en"]) {
     const mdx = `---
 title: "${post.title[locale]}"
@@ -576,7 +574,6 @@ const og = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
 </svg>
 `;
 writeFileSync(join(root, "public/images/og-home.svg"), og);
-writeFileSync(join(coversDir, "placeholder.svg"), coverSvg(0, "placeholder"));
 
 const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" fill="#080908"/>
@@ -585,4 +582,4 @@ const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
 `;
 writeFileSync(join(root, "app/icon.svg"), favicon);
 
-console.log(`Wrote ${posts.length} posts and covers`);
+console.log(`Wrote ${posts.length} posts (covers are photo WebPs in public/images/blog)`);

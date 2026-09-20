@@ -1,7 +1,16 @@
 import type { MetadataRoute } from "next";
-import { getSiteUrl } from "@/lib/site";
+import { getSiteUrl, isNoIndexSite } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
+  if (isNoIndexSite()) {
+    return {
+      rules: {
+        userAgent: "*",
+        disallow: "/",
+      },
+    };
+  }
+
   return {
     rules: {
       userAgent: "*",

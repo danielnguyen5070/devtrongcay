@@ -5,7 +5,7 @@ import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import type { BlogPost, BlogPostMeta } from "@/types/blog";
 
-const DEFAULT_COVER = "/images/blog/placeholder.svg";
+const DEFAULT_COVER = "/images/blog/green-on-green.webp";
 
 function blogFilePath(locale: string, fileName: string) {
   return path.join(process.cwd(), "content/blogs", locale, fileName);

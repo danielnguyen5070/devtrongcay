@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { getAllPosts } from "@/lib/blog";
-import { getSiteUrl } from "@/lib/site";
+import { getSiteUrl, isNoIndexSite } from "@/lib/site";
 
 function localeUrl(locale: AppLocale, path: string) {
   const base = getSiteUrl().replace(/\/$/, "");
@@ -26,6 +26,10 @@ function entry(
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  if (isNoIndexSite()) {
+    return [];
+  }
+
   const entries: MetadataRoute.Sitemap = [entry("", 1)];
 
   const postsByLocale = Object.fromEntries(

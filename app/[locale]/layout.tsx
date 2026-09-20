@@ -11,6 +11,7 @@ import {
   SITE_NAME_EN,
   absoluteUrl,
   getSiteUrl,
+  isNoIndexSite,
 } from "@/lib/site";
 import "../globals.css";
 
@@ -31,6 +32,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home.metadata" });
   const siteName = locale === "en" ? SITE_NAME_EN : SITE_NAME;
+  const noIndex = isNoIndexSite();
 
   return {
     metadataBase: new URL(getSiteUrl()),
@@ -49,16 +51,27 @@ export async function generateMetadata({
         "x-default": `/${routing.defaultLocale}`,
       },
     },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
+    robots: noIndex
+      ? {
+          index: false,
+          follow: false,
+          nocache: true,
+          googleBot: {
+            index: false,
+            follow: false,
+            noimageindex: true,
+          },
+        }
+      : {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+          },
+        },
     openGraph: {
       type: "website",
       siteName,
