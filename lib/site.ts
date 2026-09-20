@@ -1,8 +1,27 @@
 export const SITE_NAME = "Dev Trồng Cây";
 export const SITE_NAME_EN = "Dev Trong Cay";
 
+/**
+ * Canonical site origin for metadata, sitemap, and absolute URLs.
+ * Optional until you have a custom domain:
+ * 1. NEXT_PUBLIC_SITE_URL when set
+ * 2. VERCEL_URL on Vercel previews/production
+ * 3. http://localhost:3000 locally
+ */
 export function getSiteUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://devtrongcay.com";
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (configured) {
+    return configured.replace(/\/$/, "");
+  }
+
+  const vercel = process.env.VERCEL_URL?.trim();
+  if (vercel) {
+    return vercel.startsWith("http://") || vercel.startsWith("https://")
+      ? vercel.replace(/\/$/, "")
+      : `https://${vercel}`;
+  }
+
+  return "http://localhost:3000";
 }
 
 /** Block search engines on staging/preview. Set NEXT_PUBLIC_NO_INDEX=false in production. */
