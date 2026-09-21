@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { BentoGallery } from "@/components/blog/BentoGallery";
+import { greenOnGreenGalleryImages } from "@/components/blog/green-on-green-gallery";
 import { BlogImage } from "@/components/blog-image";
 import { MdxContent } from "@/components/mdx-content";
 import { Link } from "@/i18n/navigation";
@@ -16,6 +18,8 @@ import {
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
+
+const BENTO_GALLERY_SLUG = "green-on-green";
 
 const OG_IMAGE_WIDTH = 1200;
 const OG_IMAGE_HEIGHT = 630;
@@ -154,15 +158,19 @@ export default async function BlogPostPage({ params }: Props) {
           ) : null}
         </header>
 
-        <div className="relative mx-auto mt-10 flex aspect-square w-[72%] max-w-sm items-center justify-center">
-          <BlogImage
-            src={cover}
-            alt={post.title}
-            sizes="(max-width: 768px) 70vw, 384px"
-            className="h-full w-full"
-            priority
-          />
-        </div>
+        {slug === BENTO_GALLERY_SLUG ? (
+          <BentoGallery images={greenOnGreenGalleryImages} />
+        ) : (
+          <div className="relative mx-auto mt-10 flex aspect-square w-[72%] max-w-sm items-center justify-center">
+            <BlogImage
+              src={cover}
+              alt={post.title}
+              sizes="(max-width: 768px) 70vw, 384px"
+              className="h-full w-full"
+              priority
+            />
+          </div>
+        )}
 
         <div className="prose prose-invert mt-12 max-w-none prose-headings:font-heading prose-headings:font-normal prose-headings:tracking-tight prose-headings:text-[#e7e9e3] prose-p:font-sans prose-p:text-[#c4c9c0] prose-a:text-[#d6dad2] prose-strong:text-[#e7e9e3] prose-blockquote:border-white/20 prose-blockquote:text-[#9da39a] prose-code:text-[#e7e9e3] prose-li:text-[#c4c9c0] prose-hr:border-white/14">
           <MdxContent source={post.content} />
