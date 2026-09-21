@@ -1,5 +1,6 @@
 import type { BlogPostMeta } from "@/types/blog";
 import { BlogTile } from "./blog-tile";
+import { ProximityScaleGrid } from "./proximity-scale-grid";
 
 type BlogGridProps = {
   posts: BlogPostMeta[];
@@ -20,11 +21,11 @@ function BlogGrid({ posts, label, emptyLabel }: BlogGridProps) {
 
   return (
     <main className="grid-area">
-      <section className="blog-grid" aria-label={label}>
+      <ProximityScaleGrid aria-label={label}>
         {posts.map((post, index) => (
           <BlogTile key={post.slug} post={post} priority={index < 5} />
         ))}
-      </section>
+      </ProximityScaleGrid>
     </main>
   );
 }
