@@ -1,18 +1,21 @@
 /**
- * One-time import of the MDX blog (content/blogs/{vi,en}) and its images
- * (public/images/blog) into Supabase.
+ * One-time import of the MDX blog (content/blogs/{vi,en}) into Supabase and
+ * its images (public/images/blog) into Cloudinary.
  *
- *   npm run content:import              # write to Supabase
+ *   npm run content:import              # upload and write
  *   npm run content:import -- --dry-run # parse and validate only
  *
  * Requires in .env.local (local only):
- *   NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY
+ *   NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY,
+ *   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
  *
  * Idempotent: rows are upserted on their natural keys (slugs, locale, media
- * position) and images are uploaded with upsert, so re-running never creates
- * duplicates. Re-running does overwrite imported rows with the MDX values,
- * including setting those posts back to `published`. Nothing is deleted.
+ * position) and images use fixed Cloudinary public IDs with overwrite=false,
+ * so re-running returns the existing assets and never creates duplicates.
+ * Re-running does overwrite imported rows with the MDX values, including
+ * setting those posts back to `published`. Nothing is deleted.
  */
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
@@ -25,10 +28,12 @@ const LOCALES: Locale[] = ["vi", "en"];
 const ROOT = process.cwd();
 const CONTENT_DIR = path.join(ROOT, "content/blogs");
 const PUBLIC_DIR = path.join(ROOT, "public");
-const BUCKET = "blog-media";
+const CLOUDINARY_FOLDER = "devtrongcay";
+const CLOUDINARY_ALLOWED_FORMATS = "webp,jpg,png,avif";
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const DEFAULT_COVER_SOURCE = "/images/blog/green-on-green.webp";
-const DEFAULT_COVER_PATH = "defaults/cover.webp";
+// Must match getDefaultCoverUrl() in lib/media.ts.
+const DEFAULT_COVER_PUBLIC_ID = `${CLOUDINARY_FOLDER}/defaults/cover`;
 
 const MIME_BY_EXT: Record<string, string> = {
   ".webp": "image/webp",
@@ -252,16 +257,17 @@ function localImageFile(src: string) {
   return file;
 }
 
-function postImagePath(slug: string, src: string) {
-  return `posts/${slug}/${path.posix.basename(src)}`;
+function postImagePublicId(slug: string, src: string) {
+  const name = path.posix.basename(src, path.posix.extname(src));
+  return `${CLOUDINARY_FOLDER}/posts/${slug}/${name}`;
 }
 
-type Upload = { storagePath: string; file: string; contentType: string };
+type Upload = { publicId: string; file: string; contentType: string };
 
-function planUpload(uploads: Map<string, Upload>, storagePath: string, src: string) {
+function planUpload(uploads: Map<string, Upload>, publicId: string, src: string) {
   const file = localImageFile(src);
   if (!fs.existsSync(file)) {
-    warn(`Missing image ${src}, skipping ${storagePath}`);
+    warn(`Missing image ${src}, skipping ${publicId}`);
     return false;
   }
 
@@ -272,11 +278,58 @@ function planUpload(uploads: Map<string, Upload>, storagePath: string, src: stri
 
   const size = fs.statSync(file).size;
   if (size > MAX_FILE_BYTES) {
-    throw new Error(`${src}: ${size} bytes exceeds the 5 MB bucket limit`);
+    throw new Error(`${src}: ${size} bytes exceeds the 5 MB limit`);
   }
 
-  uploads.set(storagePath, { storagePath, file, contentType });
+  uploads.set(publicId, { publicId, file, contentType });
   return true;
+}
+
+type CloudinaryConfig = { cloudName: string; apiKey: string; apiSecret: string };
+
+/** Signed upload via the REST API; returns the delivery `secure_url`. */
+async function uploadToCloudinary(config: CloudinaryConfig, upload: Upload) {
+  const params: Record<string, string> = {
+    allowed_formats: CLOUDINARY_ALLOWED_FORMATS,
+    overwrite: "false",
+    public_id: upload.publicId,
+    timestamp: String(Math.floor(Date.now() / 1000)),
+  };
+  const toSign = Object.keys(params)
+    .sort()
+    .map((key) => `${key}=${params[key]}`)
+    .join("&");
+  const signature = createHash("sha1").update(toSign + config.apiSecret).digest("hex");
+
+  const form = new FormData();
+  for (const [key, value] of Object.entries(params)) form.append(key, value);
+  form.append("api_key", config.apiKey);
+  form.append("signature", signature);
+  form.append(
+    "file",
+    new Blob([fs.readFileSync(upload.file)], { type: upload.contentType }),
+    path.basename(upload.file),
+  );
+
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${config.cloudName}/image/upload`,
+    { method: "POST", body: form },
+  );
+  const body = (await response.json()) as {
+    secure_url?: string;
+    error?: { message: string };
+  };
+
+  if (!response.ok || !body.secure_url) {
+    throw new Error(
+      `Cloudinary upload ${upload.publicId}: ${body.error?.message ?? response.status}`,
+    );
+  }
+  if (!body.secure_url.startsWith(`https://res.cloudinary.com/${config.cloudName}/image/upload/`)) {
+    throw new Error(`Cloudinary upload ${upload.publicId}: unexpected URL ${body.secure_url}`);
+  }
+
+  return body.secure_url;
 }
 
 async function main() {
@@ -285,27 +338,27 @@ async function main() {
   const { posts, categories, categoryOrder } = buildModel();
 
   const uploads = new Map<string, Upload>();
-  planUpload(uploads, DEFAULT_COVER_PATH, DEFAULT_COVER_SOURCE);
+  planUpload(uploads, DEFAULT_COVER_PUBLIC_ID, DEFAULT_COVER_SOURCE);
 
-  const coverPaths = new Map<string, string | null>();
-  const mediaRows = new Map<string, { position: number; storagePath: string; alt: string }[]>();
+  const coverIds = new Map<string, string | null>();
+  const mediaRows = new Map<string, { position: number; publicId: string; alt: string }[]>();
 
   for (const post of posts) {
-    let coverPath: string | null = null;
+    let coverId: string | null = null;
     if (post.coverImage) {
-      const storagePath = postImagePath(post.slug, post.coverImage);
-      if (planUpload(uploads, storagePath, post.coverImage)) coverPath = storagePath;
+      const publicId = postImagePublicId(post.slug, post.coverImage);
+      if (planUpload(uploads, publicId, post.coverImage)) coverId = publicId;
     } else {
       warn(`${post.slug}: no cover image, the default cover will be used`);
     }
-    coverPaths.set(post.slug, coverPath);
+    coverIds.set(post.slug, coverId);
 
     const gallery = GALLERIES[post.slug] ?? [];
-    const rows: { position: number; storagePath: string; alt: string }[] = [];
+    const rows: { position: number; publicId: string; alt: string }[] = [];
     gallery.forEach((image, position) => {
-      const storagePath = postImagePath(post.slug, image.src);
-      if (planUpload(uploads, storagePath, image.src)) {
-        rows.push({ position, storagePath, alt: image.alt });
+      const publicId = postImagePublicId(post.slug, image.src);
+      if (planUpload(uploads, publicId, image.src)) {
+        rows.push({ position, publicId, alt: image.alt });
       }
     });
     mediaRows.set(post.slug, rows);
@@ -318,7 +371,7 @@ async function main() {
   if (dryRun) {
     for (const post of posts) {
       console.log(
-        `  ${post.slug}  ${post.publishedAt.slice(0, 10)}  [${post.translations.map((t) => t.locale).join(",")}]  ${post.categorySlug ?? "-"}  ${coverPaths.get(post.slug) ?? "(default cover)"}  media=${mediaRows.get(post.slug)?.length ?? 0}`,
+        `  ${post.slug}  ${post.publishedAt.slice(0, 10)}  [${post.translations.map((t) => t.locale).join(",")}]  ${post.categorySlug ?? "-"}  ${coverIds.get(post.slug) ?? "(default cover)"}  media=${mediaRows.get(post.slug)?.length ?? 0}`,
       );
     }
     console.log(`Dry run complete with ${warnings.length} warning(s). Nothing was written.`);
@@ -330,18 +383,22 @@ async function main() {
     requireEnv("SUPABASE_SECRET_KEY"),
     { auth: { persistSession: false, autoRefreshToken: false } },
   );
+  const cloudinary: CloudinaryConfig = {
+    cloudName: requireEnv("NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME"),
+    apiKey: requireEnv("CLOUDINARY_API_KEY"),
+    apiSecret: requireEnv("CLOUDINARY_API_SECRET"),
+  };
 
-  console.log(`Uploading ${uploads.size} images to "${BUCKET}"...`);
+  console.log(`Uploading ${uploads.size} images to Cloudinary "${cloudinary.cloudName}"...`);
+  const urls = new Map<string, string>();
   for (const upload of uploads.values()) {
-    const { error } = await supabase.storage
-      .from(BUCKET)
-      .upload(upload.storagePath, fs.readFileSync(upload.file), {
-        contentType: upload.contentType,
-        cacheControl: "31536000",
-        upsert: true,
-      });
-    if (error) throw new Error(`Upload ${upload.storagePath}: ${error.message}`);
+    urls.set(upload.publicId, await uploadToCloudinary(cloudinary, upload));
   }
+  const urlFor = (publicId: string) => {
+    const url = urls.get(publicId);
+    if (!url) throw new Error(`No Cloudinary URL for ${publicId}`);
+    return url;
+  };
 
   console.log("Upserting categories...");
   const { data: categoryRows, error: categoryError } = await supabase
@@ -373,13 +430,16 @@ async function main() {
   const { data: postRows, error: postError } = await supabase
     .from("posts")
     .upsert(
-      posts.map((post) => ({
-        slug: post.slug,
-        status: "published" as const,
-        published_at: post.publishedAt,
-        category_id: post.categorySlug ? (categoryIds.get(post.categorySlug) ?? null) : null,
-        cover_image_path: coverPaths.get(post.slug) ?? null,
-      })),
+      posts.map((post) => {
+        const coverId = coverIds.get(post.slug);
+        return {
+          slug: post.slug,
+          status: "published" as const,
+          published_at: post.publishedAt,
+          category_id: post.categorySlug ? (categoryIds.get(post.categorySlug) ?? null) : null,
+          cover_image_url: coverId ? urlFor(coverId) : null,
+        };
+      }),
       { onConflict: "slug" },
     )
     .select("id, slug");
@@ -410,7 +470,7 @@ async function main() {
     (mediaRows.get(post.slug) ?? []).map((row) => ({
       post_id: postId(post.slug),
       position: row.position,
-      storage_path: row.storagePath,
+      image_url: urlFor(row.publicId),
       alt: row.alt,
     })),
   );
@@ -434,6 +494,22 @@ async function main() {
     ),
   );
   console.log(`  ${counts.join("  ")}`);
+
+  const cloudinaryPrefix = "https://res.cloudinary.com/%";
+  const [{ count: legacyCovers, error: legacyCoverError }, { count: legacyMedia, error: legacyMediaError }] =
+    await Promise.all([
+      supabase
+        .from("posts")
+        .select("id", { count: "exact", head: true })
+        .not("cover_image_url", "like", cloudinaryPrefix),
+      supabase
+        .from("post_media")
+        .select("id", { count: "exact", head: true })
+        .not("image_url", "like", cloudinaryPrefix),
+    ]);
+  if (legacyCoverError) throw new Error(`legacy covers: ${legacyCoverError.message}`);
+  if (legacyMediaError) throw new Error(`legacy media: ${legacyMediaError.message}`);
+  console.log(`  Non-Cloudinary image values left: posts=${legacyCovers} post_media=${legacyMedia}`);
 
   const expectedTranslations = posts.reduce((n, p) => n + p.translations.length, 0);
   const anon = createClient<Database>(

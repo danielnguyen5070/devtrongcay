@@ -3,18 +3,17 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 type RemotePatterns = NonNullable<NonNullable<NextConfig["images"]>["remotePatterns"]>;
 
-/** Only public objects in this project's `blog-media` bucket. */
-function supabaseMediaPatterns(): RemotePatterns {
-  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  if (!raw) return [];
+/** Only image delivery URLs from this project's Cloudinary account. */
+function cloudinaryPatterns(): RemotePatterns {
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.trim();
+  if (!cloudName) return [];
 
-  const url = new URL(raw);
   return [
     {
-      protocol: url.protocol === "http:" ? "http" : "https",
-      hostname: url.hostname,
-      port: url.port,
-      pathname: "/storage/v1/object/public/blog-media/**",
+      protocol: "https",
+      hostname: "res.cloudinary.com",
+      port: "",
+      pathname: `/${cloudName}/image/upload/**`,
       search: "",
     },
   ];
@@ -22,7 +21,7 @@ function supabaseMediaPatterns(): RemotePatterns {
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: supabaseMediaPatterns(),
+    remotePatterns: cloudinaryPatterns(),
   },
 };
 

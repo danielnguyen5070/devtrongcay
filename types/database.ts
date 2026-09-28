@@ -69,25 +69,25 @@ export type Database = {
           alt: string
           created_at: string
           id: string
+          image_url: string
           position: number
           post_id: string
-          storage_path: string
         }
         Insert: {
           alt?: string
           created_at?: string
           id?: string
+          image_url: string
           position: number
           post_id: string
-          storage_path: string
         }
         Update: {
           alt?: string
           created_at?: string
           id?: string
+          image_url?: string
           position?: number
           post_id?: string
-          storage_path?: string
         }
         Relationships: [
           {
@@ -154,7 +154,7 @@ export type Database = {
       posts: {
         Row: {
           category_id: string | null
-          cover_image_path: string | null
+          cover_image_url: string | null
           created_at: string
           id: string
           published_at: string | null
@@ -164,7 +164,7 @@ export type Database = {
         }
         Insert: {
           category_id?: string | null
-          cover_image_path?: string | null
+          cover_image_url?: string | null
           created_at?: string
           id?: string
           published_at?: string | null
@@ -174,7 +174,7 @@ export type Database = {
         }
         Update: {
           category_id?: string | null
-          cover_image_path?: string | null
+          cover_image_url?: string | null
           created_at?: string
           id?: string
           published_at?: string | null
@@ -197,7 +197,7 @@ export type Database = {
       published_post_cards: {
         Row: {
           category_name: string | null
-          cover_image_path: string | null
+          cover_image_url: string | null
           description: string | null
           id: string | null
           locale: Database["public"]["Enums"]["app_locale"] | null

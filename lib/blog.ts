@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { hasLocale } from "next-intl";
 import { routing, type AppLocale } from "@/i18n/routing";
-import { getCoverUrl, getMediaUrl } from "@/lib/media";
+import { getCoverUrl } from "@/lib/media";
 import { getPublicSupabase } from "@/lib/supabase/public";
 import type { BlogPost, BlogPostMeta } from "@/types/blog";
 
@@ -29,7 +29,7 @@ export const getPublishedPosts = cache(
 
     const { data, error } = await getPublicSupabase()
       .from("published_post_cards")
-      .select("slug, published_at, cover_image_path, title, description, category_name")
+      .select("slug, published_at, cover_image_url, title, description, category_name")
       .eq("locale", locale)
       .order("published_at", { ascending: false })
       .order("slug");
@@ -44,7 +44,7 @@ export const getPublishedPosts = cache(
               title: row.title,
               description: row.description ?? "",
               date: row.published_at ?? "",
-              coverImage: getCoverUrl(row.cover_image_path),
+              coverImage: getCoverUrl(row.cover_image_url),
               category: row.category_name ?? "",
             },
           ]
@@ -95,10 +95,10 @@ export const getPublishedPost = cache(
     const { data, error } = await getPublicSupabase()
       .from("posts")
       .select(
-        `slug, published_at, cover_image_path,
+        `slug, published_at, cover_image_url,
          translation:post_translations!inner(title, description, body),
          category:categories(translations:category_translations(locale, name)),
-         media:post_media(position, storage_path, alt)`,
+         media:post_media(position, image_url, alt)`,
       )
       .eq("slug", slug)
       .eq("status", "published")
@@ -118,13 +118,13 @@ export const getPublishedPost = cache(
       title: translation.title,
       description: translation.description,
       date: data.published_at ?? "",
-      coverImage: getCoverUrl(data.cover_image_path),
+      coverImage: getCoverUrl(data.cover_image_url),
       category,
       content: translation.body,
       gallery: [...data.media]
         .sort((a, b) => a.position - b.position)
         .map((item) => ({
-          src: getMediaUrl(item.storage_path),
+          src: item.image_url,
           alt: item.alt || translation.title,
         })),
     };

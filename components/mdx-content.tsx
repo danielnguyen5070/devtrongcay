@@ -3,19 +3,11 @@ import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
-import { getMediaUrl } from "@/lib/media";
 
 const prettyCodeOptions = {
   theme: "github-dark",
   keepBackground: false,
 };
-
-/** Bare paths (`posts/slug/photo.webp`) point into the blog-media bucket. */
-function resolveImageSrc(src: string) {
-  return /^(https?:)?\/\//.test(src) || src.startsWith("/")
-    ? src
-    : getMediaUrl(src);
-}
 
 function safeHref(href: string | undefined) {
   if (!href) return undefined;
@@ -32,7 +24,7 @@ const components: MDXComponents = {
     return (
       <span className="relative my-8 block aspect-[16/10] overflow-hidden border border-white/10">
         <Image
-          src={resolveImageSrc(src)}
+          src={src}
           alt={alt}
           fill
           className="object-cover"
