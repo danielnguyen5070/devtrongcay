@@ -1,4 +1,4 @@
-export const CLOUDINARY_FOLDER = "devtrongcay";
+const CLOUDINARY_FOLDER = "devtrongcay";
 
 function cloudName() {
   const name = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.trim();
@@ -9,7 +9,7 @@ function cloudName() {
   return name;
 }
 
-export function getDefaultCoverUrl() {
+function getDefaultCoverUrl() {
   return `https://res.cloudinary.com/${cloudName()}/image/upload/${CLOUDINARY_FOLDER}/defaults/cover.webp`;
 }
 
