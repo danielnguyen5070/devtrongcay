@@ -1,130 +1,132 @@
-import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
+import "server-only";
+import { cache } from "react";
 import { hasLocale } from "next-intl";
-import { routing } from "@/i18n/routing";
+import { routing, type AppLocale } from "@/i18n/routing";
+import { getCoverUrl, getMediaUrl } from "@/lib/media";
+import { getPublicSupabase } from "@/lib/supabase/public";
 import type { BlogPost, BlogPostMeta } from "@/types/blog";
 
-const DEFAULT_COVER = "/images/blog/green-on-green.webp";
+const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
-function blogFilePath(locale: string, fileName: string) {
-  return path.join(process.cwd(), "content/blogs", locale, fileName);
+function isValidSlug(slug: string) {
+  return SLUG_PATTERN.test(slug);
 }
 
-function blogDir(locale: string) {
-  return path.join(process.cwd(), "content/blogs", locale);
+/** Logs the database error server-side and throws a generic one. */
+function queryFailed(what: string, error: { message: string; code?: string }): never {
+  console.error(`[blog] Failed to load ${what}: ${error.message}`, error.code ?? "");
+  throw new Error(`Failed to load ${what}.`);
 }
 
-function getBlogDir(locale: string) {
-  if (!hasLocale(routing.locales, locale)) {
-    return null;
-  }
-
-  const dir = blogDir(locale);
-  if (!fs.existsSync(dir)) {
-    return null;
-  }
-
-  return dir;
+function sortLocales(locales: Iterable<AppLocale>) {
+  const set = new Set(locales);
+  return routing.locales.filter((locale) => set.has(locale));
 }
 
-function getMdxFileNames(locale: string): string[] {
-  const dir = getBlogDir(locale);
-  if (!dir) return [];
+export const getPublishedPosts = cache(
+  async (locale: string): Promise<BlogPostMeta[]> => {
+    if (!hasLocale(routing.locales, locale)) return [];
 
-  return fs.readdirSync(dir).filter((file) => file.endsWith(".mdx"));
-}
+    const { data, error } = await getPublicSupabase()
+      .from("published_post_cards")
+      .select("slug, published_at, cover_image_path, title, description, category_name")
+      .eq("locale", locale)
+      .order("published_at", { ascending: false })
+      .order("slug");
 
-function toSlug(fileName: string) {
-  return fileName.replace(/\.mdx$/, "");
-}
+    if (error) queryFailed("posts", error);
 
-function requiredString(value: unknown, fallback: string) {
-  if (value === undefined || value === null || value === "") {
-    return fallback;
-  }
+    return data.flatMap((row) =>
+      row.slug && row.title
+        ? [
+            {
+              slug: row.slug,
+              title: row.title,
+              description: row.description ?? "",
+              date: row.published_at ?? "",
+              coverImage: getCoverUrl(row.cover_image_path),
+              category: row.category_name ?? "",
+            },
+          ]
+        : [],
+    );
+  },
+);
 
-  return String(value);
-}
+/** Every published (locale, slug) pair, newest first. */
+export const getPublishedSlugs = cache(
+  async (): Promise<{ locale: AppLocale; slug: string }[]> => {
+    const { data, error } = await getPublicSupabase()
+      .from("published_post_cards")
+      .select("slug, locale")
+      .order("published_at", { ascending: false })
+      .order("slug");
 
-function parsePost(locale: string, fileName: string): BlogPost | null {
-  if (!hasLocale(routing.locales, locale)) {
-    return null;
-  }
+    if (error) queryFailed("slugs", error);
 
-  const fullPath = blogFilePath(locale, fileName);
-  if (!fs.existsSync(fullPath)) {
-    return null;
-  }
+    return data.flatMap((row) =>
+      row.slug && row.locale ? [{ locale: row.locale, slug: row.slug }] : [],
+    );
+  },
+);
 
-  const raw = fs.readFileSync(fullPath, "utf8");
-  const { data, content } = matter(raw);
-  const fileSlug = toSlug(fileName);
+/** Locales in which a published post has a translation. */
+export const getPostLocales = cache(
+  async (slug: string): Promise<AppLocale[]> => {
+    if (!isValidSlug(slug)) return [];
 
-  return {
-    title: requiredString(data.title, fileSlug),
-    description: requiredString(data.description, ""),
-    slug: requiredString(data.slug, fileSlug),
-    date: requiredString(data.date, ""),
-    coverImage: requiredString(data.coverImage, DEFAULT_COVER),
-    category: requiredString(data.category, ""),
-    content,
-  };
-}
+    const { data, error } = await getPublicSupabase()
+      .from("published_post_cards")
+      .select("locale")
+      .eq("slug", slug);
 
-export function getPostCover(post: BlogPostMeta) {
-  return post.coverImage || DEFAULT_COVER;
-}
+    if (error) queryFailed("post locales", error);
 
-export function getAllSlugs(locale: string): string[] {
-  return getMdxFileNames(locale)
-    .map((fileName) => parsePost(locale, fileName)?.slug)
-    .filter((slug): slug is string => Boolean(slug));
-}
+    return sortLocales(data.flatMap((row) => (row.locale ? [row.locale] : [])));
+  },
+);
 
-export function getAllPosts(locale: string): BlogPostMeta[] {
-  return getMdxFileNames(locale)
-    .map((fileName) => {
-      const post = parsePost(locale, fileName);
-      if (!post) return null;
-
-      return {
-        title: post.title,
-        description: post.description,
-        slug: post.slug,
-        date: post.date,
-        coverImage: post.coverImage,
-        category: post.category,
-      };
-    })
-    .filter((post): post is BlogPostMeta => post !== null)
-    .sort((a, b) => {
-      const aTime = new Date(a.date).getTime();
-      const bTime = new Date(b.date).getTime();
-      return bTime - aTime;
-    });
-}
-
-export function getPostBySlug(locale: string, slug: string): BlogPost | null {
-  if (!slug || slug.includes("/") || slug.includes("..")) {
-    return null;
-  }
-
-  const fromFile = parsePost(locale, `${slug}.mdx`);
-  if (fromFile && fromFile.slug === slug) {
-    return fromFile;
-  }
-
-  for (const fileName of getMdxFileNames(locale)) {
-    const post = parsePost(locale, fileName);
-    if (post?.slug === slug) {
-      return post;
+export const getPublishedPost = cache(
+  async (locale: string, slug: string): Promise<BlogPost | null> => {
+    if (!hasLocale(routing.locales, locale) || !isValidSlug(slug)) {
+      return null;
     }
-  }
 
-  return null;
-}
+    const { data, error } = await getPublicSupabase()
+      .from("posts")
+      .select(
+        `slug, published_at, cover_image_path,
+         translation:post_translations!inner(title, description, body),
+         category:categories(translations:category_translations(locale, name)),
+         media:post_media(position, storage_path, alt)`,
+      )
+      .eq("slug", slug)
+      .eq("status", "published")
+      .eq("translation.locale", locale)
+      .maybeSingle();
 
-export function hasPostInLocale(slug: string, locale: string) {
-  return getPostBySlug(locale, slug) !== null;
-}
+    if (error) queryFailed("post", error);
+
+    const translation = data?.translation[0];
+    if (!data || !translation) return null;
+
+    const category =
+      data.category?.translations.find((item) => item.locale === locale)?.name ?? "";
+
+    return {
+      slug: data.slug,
+      title: translation.title,
+      description: translation.description,
+      date: data.published_at ?? "",
+      coverImage: getCoverUrl(data.cover_image_path),
+      category,
+      content: translation.body,
+      gallery: [...data.media]
+        .sort((a, b) => a.position - b.position)
+        .map((item) => ({
+          src: getMediaUrl(item.storage_path),
+          alt: item.alt || translation.title,
+        })),
+    };
+  },
+);

@@ -7,6 +7,12 @@ export type BlogPostMeta = {
   category: string;
 };
 
+export type BlogMedia = {
+  src: string;
+  alt: string;
+};
+
 export type BlogPost = BlogPostMeta & {
   content: string;
+  gallery: BlogMedia[];
 };

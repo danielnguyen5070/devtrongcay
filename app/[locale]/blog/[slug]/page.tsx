@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BentoGallery } from "@/components/blog/BentoGallery";
-import { greenOnGreenGalleryImages } from "@/components/blog/green-on-green-gallery";
 import { BlogImage } from "@/components/blog-image";
 import { MdxContent } from "@/components/mdx-content";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { getAllSlugs, getPostBySlug, getPostCover } from "@/lib/blog";
+import {
+  getPostLocales,
+  getPublishedPost,
+  getPublishedSlugs,
+} from "@/lib/blog";
 import {
   SITE_NAME,
   SITE_NAME_EN,
@@ -15,11 +18,11 @@ import {
   localeToOg,
 } from "@/lib/site";
 
+export const revalidate = 3600;
+
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
-
-const BENTO_GALLERY_SLUG = "green-on-green";
 
 const OG_IMAGE_WIDTH = 1200;
 const OG_IMAGE_HEIGHT = 630;
@@ -42,13 +45,11 @@ function formatDate(value: string, locale: string) {
   }).format(parsed);
 }
 
-function blogPostLanguages(slug: string) {
+async function blogPostLanguages(slug: string) {
   const languages: Record<string, string> = {};
 
-  for (const locale of routing.locales) {
-    if (getPostBySlug(locale, slug)) {
-      languages[locale] = `/${locale}/blog/${slug}`;
-    }
+  for (const locale of await getPostLocales(slug)) {
+    languages[locale] = `/${locale}/blog/${slug}`;
   }
 
   const defaultPath = languages[routing.defaultLocale];
@@ -59,15 +60,13 @@ function blogPostLanguages(slug: string) {
   return languages;
 }
 
-export function generateStaticParams() {
-  return routing.locales.flatMap((locale) =>
-    getAllSlugs(locale).map((slug) => ({ locale, slug })),
-  );
+export async function generateStaticParams() {
+  return getPublishedSlugs();
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = getPostBySlug(locale, slug);
+  const post = await getPublishedPost(locale, slug);
 
   if (!post) {
     return {};
@@ -75,7 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const siteName = locale === "en" ? SITE_NAME_EN : SITE_NAME;
   const path = `/${locale}/blog/${slug}`;
-  const image = getPostCover(post);
+  const image = post.coverImage;
   const publishedTime = toIsoDate(post.date);
 
   return {
@@ -83,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: post.description,
     alternates: {
       canonical: path,
-      languages: blogPostLanguages(slug),
+      languages: await blogPostLanguages(slug),
     },
     openGraph: {
       title: `${post.title} | ${siteName}`,
@@ -114,14 +113,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { locale, slug } = await params;
-  const post = getPostBySlug(locale, slug);
+  const post = await getPublishedPost(locale, slug);
 
   if (!post) {
     notFound();
   }
 
   const t = await getTranslations("blog");
-  const cover = getPostCover(post);
 
   return (
     <article className="article-shell">
@@ -158,12 +156,12 @@ export default async function BlogPostPage({ params }: Props) {
           ) : null}
         </header>
 
-        {slug === BENTO_GALLERY_SLUG ? (
-          <BentoGallery images={greenOnGreenGalleryImages} />
+        {post.gallery.length > 0 ? (
+          <BentoGallery images={post.gallery} />
         ) : (
           <div className="relative mx-auto mt-10 flex aspect-square w-[72%] max-w-sm items-center justify-center">
             <BlogImage
-              src={cover}
+              src={post.coverImage}
               alt={post.title}
               sizes="(max-width: 768px) 70vw, 384px"
               className="h-full w-full"

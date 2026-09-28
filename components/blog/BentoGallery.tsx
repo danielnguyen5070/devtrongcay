@@ -8,9 +8,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
-import type { BentoGalleryImage } from "./green-on-green-gallery";
 
 gsap.registerPlugin(Flip, ScrollTrigger, ExpoScaleEase);
+
+/**
+ * Layout expects up to 3 images:
+ * 1) wide top-left
+ * 2) top-right highlight (zooms to center on scroll)
+ * 3) full-width bottom
+ */
+type BentoGalleryImage = {
+  src: string;
+  alt: string;
+};
 
 type BentoGalleryProps = {
   images: BentoGalleryImage[];
@@ -177,4 +187,4 @@ function BentoGallery({ images, className }: BentoGalleryProps) {
 }
 
 export { BentoGallery };
-export type { BentoGalleryProps };
+export type { BentoGalleryImage, BentoGalleryProps };

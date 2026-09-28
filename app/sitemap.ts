@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 import { routing, type AppLocale } from "@/i18n/routing";
-import { getAllPosts } from "@/lib/blog";
+import { getPublishedSlugs } from "@/lib/blog";
 import { getSiteUrl, isNoIndexSite } from "@/lib/site";
+
+export const revalidate = 3600;
 
 function localeUrl(locale: AppLocale, path: string) {
   const base = getSiteUrl().replace(/\/$/, "");
@@ -25,29 +27,25 @@ function entry(
   };
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (isNoIndexSite()) {
     return [];
   }
 
   const entries: MetadataRoute.Sitemap = [entry("", 1)];
 
-  const postsByLocale = Object.fromEntries(
-    routing.locales.map((locale) => [locale, getAllPosts(locale)]),
-  ) as Record<AppLocale, ReturnType<typeof getAllPosts>>;
+  const localesBySlug = new Map<string, Set<AppLocale>>();
+  for (const { slug, locale } of await getPublishedSlugs()) {
+    const locales = localesBySlug.get(slug) ?? new Set<AppLocale>();
+    locales.add(locale);
+    localesBySlug.set(slug, locales);
+  }
 
-  const blogSlugs = new Set(
-    routing.locales.flatMap((locale) =>
-      postsByLocale[locale].map((post) => post.slug),
-    ),
-  );
-
-  for (const slug of blogSlugs) {
+  for (const [slug, locales] of localesBySlug) {
     const languages: Record<string, string> = {};
 
     for (const locale of routing.locales) {
-      const post = postsByLocale[locale].find((item) => item.slug === slug);
-      if (!post) continue;
+      if (!locales.has(locale)) continue;
       languages[locale] = localeUrl(locale, `/blog/${slug}`);
     }
 

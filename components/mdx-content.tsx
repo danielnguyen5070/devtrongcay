@@ -3,13 +3,28 @@ import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
+import { getMediaUrl } from "@/lib/media";
 
 const prettyCodeOptions = {
   theme: "github-dark",
   keepBackground: false,
 };
 
+/** Bare paths (`posts/slug/photo.webp`) point into the blog-media bucket. */
+function resolveImageSrc(src: string) {
+  return /^(https?:)?\/\//.test(src) || src.startsWith("/")
+    ? src
+    : getMediaUrl(src);
+}
+
+function safeHref(href: string | undefined) {
+  if (!href) return undefined;
+  const scheme = href.trim().match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
+  return !scheme || ["http", "https", "mailto"].includes(scheme) ? href : undefined;
+}
+
 const components: MDXComponents = {
+  a: ({ href, ...props }) => <a href={safeHref(href)} {...props} />,
   img: (props) => {
     const { src, alt = "" } = props;
     if (!src || typeof src !== "string") return null;
@@ -17,7 +32,7 @@ const components: MDXComponents = {
     return (
       <span className="relative my-8 block aspect-[16/10] overflow-hidden border border-white/10">
         <Image
-          src={src}
+          src={resolveImageSrc(src)}
           alt={alt}
           fill
           className="object-cover"
@@ -28,13 +43,19 @@ const components: MDXComponents = {
   },
 };
 
+/**
+ * Renders stored post bodies as plain Markdown (GFM). `format: "md"` disables
+ * JSX and expressions, and raw HTML is stripped.
+ */
 function MdxContent({ source }: { source: string }) {
   return (
     <MDXRemote
       source={source}
       components={components}
       options={{
+        blockJS: true,
         mdxOptions: {
+          format: "md",
           remarkPlugins: [remarkGfm],
           rehypePlugins: [[rehypePrettyCode, prettyCodeOptions]],
         },

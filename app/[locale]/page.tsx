@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { BlogGrid } from "@/components/blog-grid";
 import { routing } from "@/i18n/routing";
-import { getAllPosts } from "@/lib/blog";
+import { getPublishedPosts } from "@/lib/blog";
 import { SITE_NAME, SITE_NAME_EN, localeToOg, alternateOgLocale } from "@/lib/site";
+
+export const revalidate = 3600;
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -59,7 +61,7 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations("home");
   const blog = await getTranslations("blog");
-  const posts = getAllPosts(locale);
+  const posts = await getPublishedPosts(locale);
 
   return (
     <div className="home-page">

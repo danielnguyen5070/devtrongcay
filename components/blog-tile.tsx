@@ -1,5 +1,4 @@
 import { Link } from "@/i18n/navigation";
-import { getPostCover } from "@/lib/blog";
 import type { BlogPostMeta } from "@/types/blog";
 import { BlogImage } from "./blog-image";
 
@@ -15,7 +14,7 @@ function BlogTile({ post, priority = false }: BlogTileProps) {
       className="blog-tile"
       aria-label={post.title}
     >
-      <BlogImage src={getPostCover(post)} alt={post.title} priority={priority} />
+      <BlogImage src={post.coverImage} alt={post.title} priority={priority} />
       <div className="blog-tile-label">
         <span>{post.title}</span>
       </div>
