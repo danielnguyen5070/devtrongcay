@@ -159,6 +159,7 @@ export type Database = {
           id: string
           published_at: string | null
           slug: string
+          sort_order: number
           status: Database["public"]["Enums"]["post_status"]
           updated_at: string
         }
@@ -169,6 +170,7 @@ export type Database = {
           id?: string
           published_at?: string | null
           slug: string
+          sort_order?: number
           status?: Database["public"]["Enums"]["post_status"]
           updated_at?: string
         }
@@ -179,6 +181,7 @@ export type Database = {
           id?: string
           published_at?: string | null
           slug?: string
+          sort_order?: number
           status?: Database["public"]["Enums"]["post_status"]
           updated_at?: string
         }
@@ -203,6 +206,7 @@ export type Database = {
           locale: Database["public"]["Enums"]["app_locale"] | null
           published_at: string | null
           slug: string | null
+          sort_order: number | null
           title: string | null
         }
         Relationships: []

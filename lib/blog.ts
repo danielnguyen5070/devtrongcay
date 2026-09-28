@@ -31,6 +31,7 @@ export const getPublishedPosts = cache(
       .from("published_post_cards")
       .select("slug, published_at, cover_image_url, title, description, category_name")
       .eq("locale", locale)
+      .order("sort_order", { ascending: true })
       .order("published_at", { ascending: false })
       .order("slug");
 
@@ -53,12 +54,13 @@ export const getPublishedPosts = cache(
   },
 );
 
-/** Every published (locale, slug) pair, newest first. */
+/** Every published (locale, slug) pair, in display order. */
 export const getPublishedSlugs = cache(
   async (): Promise<{ locale: AppLocale; slug: string }[]> => {
     const { data, error } = await getPublicSupabase()
       .from("published_post_cards")
       .select("slug, locale")
+      .order("sort_order", { ascending: true })
       .order("published_at", { ascending: false })
       .order("slug");
 
