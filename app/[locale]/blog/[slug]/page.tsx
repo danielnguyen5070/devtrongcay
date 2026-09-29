@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BentoGallery } from "@/components/blog/BentoGallery";
 import { BlogImage } from "@/components/blog-image";
+import { ProductBuyBox } from "@/components/cart/product-buy-box";
 import { MdxContent } from "@/components/mdx-content";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
@@ -155,6 +156,21 @@ export default async function BlogPostPage({ params }: Props) {
             </time>
           ) : null}
         </header>
+
+        {post.product.productStatus !== "draft" && post.product.priceVnd !== null ? (
+          <ProductBuyBox
+            initialProduct={{
+              postId: post.product.id,
+              slug: post.slug,
+              title: post.title,
+              coverImage: post.coverImage,
+              priceVnd: post.product.priceVnd,
+              stock: post.product.stock,
+              productStatus: post.product.productStatus,
+              published: true,
+            }}
+          />
+        ) : null}
 
         {post.gallery.length > 0 ? (
           <BentoGallery images={post.gallery} />

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { CartButton } from "@/components/cart/cart-button";
+import { CartDrawer } from "@/components/cart/cart-drawer";
+import { CartSync } from "@/components/cart/cart-sync";
 import { FloatingSocialBar } from "@/components/floating-social-bar";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { routing } from "@/i18n/routing";
@@ -116,8 +119,13 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body className="min-h-full bg-background font-sans text-foreground">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <FloatingSocialBar />
-          <LocaleSwitcher />
+          <div className="site-actions">
+            <CartButton />
+            <LocaleSwitcher />
+          </div>
           {children}
+          <CartDrawer />
+          <CartSync />
         </NextIntlClientProvider>
       </body>
     </html>

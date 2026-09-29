@@ -64,6 +64,109 @@ export type Database = {
           },
         ]
       }
+      order_items: {
+        Row: {
+          id: string
+          line_total_vnd: number
+          order_id: string
+          post_id: string | null
+          product_name: string
+          quantity: number
+          unit_price_vnd: number
+        }
+        Insert: {
+          id?: string
+          line_total_vnd: number
+          order_id: string
+          post_id?: string | null
+          product_name: string
+          quantity: number
+          unit_price_vnd: number
+        }
+        Update: {
+          id?: string
+          line_total_vnd?: number
+          order_id?: string
+          post_id?: string | null
+          product_name?: string
+          quantity?: number
+          unit_price_vnd?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "published_post_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string
+          code: string
+          created_at: string
+          customer_name: string
+          id: string
+          locale: Database["public"]["Enums"]["app_locale"]
+          note: string
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          phone: string
+          shipping_fee_vnd: number
+          status: Database["public"]["Enums"]["order_status"]
+          subtotal_vnd: number
+          total_vnd: number
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          code: string
+          created_at?: string
+          customer_name: string
+          id?: string
+          locale: Database["public"]["Enums"]["app_locale"]
+          note?: string
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          phone: string
+          shipping_fee_vnd: number
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal_vnd: number
+          total_vnd: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          code?: string
+          created_at?: string
+          customer_name?: string
+          id?: string
+          locale?: Database["public"]["Enums"]["app_locale"]
+          note?: string
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          phone?: string
+          shipping_fee_vnd?: number
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal_vnd?: number
+          total_vnd?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       post_media: {
         Row: {
           alt: string
@@ -157,10 +260,13 @@ export type Database = {
           cover_image_url: string | null
           created_at: string
           id: string
+          price_vnd: number | null
+          product_status: Database["public"]["Enums"]["product_status"]
           published_at: string | null
           slug: string
           sort_order: number
           status: Database["public"]["Enums"]["post_status"]
+          stock: number
           updated_at: string
         }
         Insert: {
@@ -168,10 +274,13 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           id?: string
+          price_vnd?: number | null
+          product_status?: Database["public"]["Enums"]["product_status"]
           published_at?: string | null
           slug: string
           sort_order?: number
           status?: Database["public"]["Enums"]["post_status"]
+          stock?: number
           updated_at?: string
         }
         Update: {
@@ -179,10 +288,13 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           id?: string
+          price_vnd?: number | null
+          product_status?: Database["public"]["Enums"]["product_status"]
           published_at?: string | null
           slug?: string
           sort_order?: number
           status?: Database["public"]["Enums"]["post_status"]
+          stock?: number
           updated_at?: string
         }
         Relationships: [
@@ -213,11 +325,28 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      place_order: {
+        Args: {
+          p_customer: Json
+          p_lines: Json
+          p_shipping_fee_vnd: number
+          p_subtotal_vnd: number
+          p_total_vnd: number
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_locale: "vi" | "en"
+      order_status:
+        | "pending"
+        | "confirmed"
+        | "shipping"
+        | "completed"
+        | "cancelled"
+      payment_method: "cod" | "bank_transfer"
       post_status: "draft" | "published"
+      product_status: "draft" | "active" | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -346,7 +475,16 @@ export const Constants = {
   public: {
     Enums: {
       app_locale: ["vi", "en"],
+      order_status: [
+        "pending",
+        "confirmed",
+        "shipping",
+        "completed",
+        "cancelled",
+      ],
+      payment_method: ["cod", "bank_transfer"],
       post_status: ["draft", "published"],
+      product_status: ["draft", "active", "archived"],
     },
   },
 } as const

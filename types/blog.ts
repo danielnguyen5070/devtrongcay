@@ -12,7 +12,15 @@ export type BlogMedia = {
   alt: string;
 };
 
+export type BlogProduct = {
+  id: string;
+  priceVnd: number | null;
+  stock: number;
+  productStatus: "draft" | "active" | "archived";
+};
+
 export type BlogPost = BlogPostMeta & {
   content: string;
   gallery: BlogMedia[];
+  product: BlogProduct;
 };

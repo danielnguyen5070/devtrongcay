@@ -97,7 +97,7 @@ export const getPublishedPost = cache(
     const { data, error } = await getPublicSupabase()
       .from("posts")
       .select(
-        `slug, published_at, cover_image_url,
+        `id, slug, published_at, cover_image_url, price_vnd, stock, product_status,
          translation:post_translations!inner(title, description, body),
          category:categories(translations:category_translations(locale, name)),
          media:post_media(position, image_url, alt)`,
@@ -129,6 +129,12 @@ export const getPublishedPost = cache(
           src: item.image_url,
           alt: item.alt || translation.title,
         })),
+      product: {
+        id: data.id,
+        priceVnd: data.price_vnd,
+        stock: data.stock,
+        productStatus: data.product_status,
+      },
     };
   },
 );
