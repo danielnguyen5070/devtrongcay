@@ -80,16 +80,16 @@ export const SOCIAL_LINKS: SocialLink[] = [
     icon: YouTubeIcon,
   },
   {
-    name: "Instagram",
-    href: "https://www.instagram.com/nguyenviet4711/",
-    color: "#e1306c",
-    icon: InstagramIcon,
-  },
-  {
     name: "X",
     href: "https://x.com/VietNguyenwzaa",
     color: "#000000",
     icon: XIcon,
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/nguyenviet4711/",
+    color: "#e1306c",
+    icon: InstagramIcon,
   },
 ];
 
