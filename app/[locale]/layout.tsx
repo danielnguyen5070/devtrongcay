@@ -43,6 +43,19 @@ export async function generateMetadata({
     description: t("description"),
     keywords: t("keywords"),
     applicationName: siteName,
+    icons: {
+      icon: [
+        { url: "/images/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/images/icon-512.png", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [
+        {
+          url: "/images/apple-touch-icon.png",
+          sizes: "180x180",
+          type: "image/png",
+        },
+      ],
+    },
     alternates: {
       canonical: `/${locale}`,
       languages: {
