@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { CartButton } from "@/components/cart/cart-button";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { CartSync } from "@/components/cart/cart-sync";
+import { ChatButton } from "@/components/chat/chat-button";
+import { ChatPanel } from "@/components/chat/chat-panel";
 import { FloatingSocialBar } from "@/components/floating-social-bar";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { routing } from "@/i18n/routing";
@@ -120,11 +122,13 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider locale={locale} messages={messages}>
           <FloatingSocialBar />
           <div className="site-actions">
+            <ChatButton />
             <CartButton />
             <LocaleSwitcher />
           </div>
           {children}
           <CartDrawer />
+          <ChatPanel />
           <CartSync />
         </NextIntlClientProvider>
       </body>

@@ -88,6 +88,28 @@
       "generic": "Could not place the order. Please try again."
     }
   },
+  "chat": {
+    "label": "Ask",
+    "open": "Open plant assistant",
+    "title": "Plant assistant",
+    "close": "Close assistant",
+    "newChat": "New chat",
+    "welcome": "Ask how to care for a plant, or about its current price and stock.",
+    "suggestion1": "How do I care for Alocasia Scalprum?",
+    "suggestion2": "Why are my plant's leaves turning yellow?",
+    "suggestion3": "Is Alocasia Scalprum in stock?",
+    "placeholder": "Type your question…",
+    "send": "Send",
+    "stop": "Stop",
+    "thinking": "Thinking…",
+    "searching": "Searching our articles…",
+    "checkingStock": "Checking price and stock…",
+    "sources": "From our articles",
+    "error": "Something went wrong. Please try again.",
+    "rateLimited": "You're sending messages too quickly. Please wait a few minutes.",
+    "retry": "Try again",
+    "disclaimer": "Care answers come from our articles. Prices and stock are checked live."
+  },
   "notFound": {
     "title": "Page not found",
     "description": "This path does not exist.",

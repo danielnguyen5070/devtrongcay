@@ -88,6 +88,28 @@
       "generic": "Không thể đặt hàng. Vui lòng thử lại."
     }
   },
+  "chat": {
+    "label": "Hỏi đáp",
+    "open": "Mở trợ lý chăm cây",
+    "title": "Trợ lý chăm cây",
+    "close": "Đóng trợ lý",
+    "newChat": "Cuộc trò chuyện mới",
+    "welcome": "Hỏi cách chăm sóc cây, hoặc giá và tình trạng còn hàng hiện tại.",
+    "suggestion1": "Chăm sóc Alocasia Scalprum như thế nào?",
+    "suggestion2": "Tại sao lá cây bị vàng?",
+    "suggestion3": "Alocasia Scalprum còn hàng không?",
+    "placeholder": "Nhập câu hỏi…",
+    "send": "Gửi",
+    "stop": "Dừng",
+    "thinking": "Đang trả lời…",
+    "searching": "Đang tìm trong bài viết…",
+    "checkingStock": "Đang kiểm tra giá và tồn kho…",
+    "sources": "Từ bài viết",
+    "error": "Có lỗi xảy ra. Vui lòng thử lại.",
+    "rateLimited": "Bạn gửi tin nhắn quá nhanh. Vui lòng chờ vài phút.",
+    "retry": "Thử lại",
+    "disclaimer": "Câu trả lời chăm sóc dựa trên bài viết của shop. Giá và tồn kho được kiểm tra trực tiếp."
+  },
   "notFound": {
     "title": "Không tìm thấy trang",
     "description": "Đường dẫn này không tồn tại.",

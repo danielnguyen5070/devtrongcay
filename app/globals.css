@@ -226,7 +226,8 @@
   pointer-events: auto;
 }
 
-.cart-button {
+.cart-button,
+.chat-button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -241,11 +242,18 @@
 }
 
 .cart-button:hover,
-.cart-button:focus-visible {
+.cart-button:focus-visible,
+.chat-button:hover,
+.chat-button:focus-visible {
   color: var(--text);
 }
 
-.cart-drawer {
+.chat-button span {
+  text-transform: uppercase;
+}
+
+.cart-drawer,
+.chat-panel {
   position: fixed;
   inset: 0 0 0 auto;
   width: min(420px, 100vw);
@@ -260,7 +268,8 @@
   color: var(--text);
 }
 
-.cart-drawer::backdrop {
+.cart-drawer::backdrop,
+.chat-panel::backdrop {
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(2px);
 }

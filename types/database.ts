@@ -64,6 +64,68 @@ export type Database = {
           },
         ]
       }
+      document_chunks: {
+        Row: {
+          chunk_index: number
+          content: string
+          content_hash: string
+          created_at: string
+          embedding: string
+          embedding_model: string
+          heading: string
+          id: string
+          locale: Database["public"]["Enums"]["app_locale"]
+          metadata: Json
+          post_id: string
+          source_hash: string
+          source_updated_at: string
+          token_count: number
+          updated_at: string
+        }
+        Insert: {
+          chunk_index: number
+          content: string
+          content_hash: string
+          created_at?: string
+          embedding: string
+          embedding_model: string
+          heading?: string
+          id?: string
+          locale: Database["public"]["Enums"]["app_locale"]
+          metadata?: Json
+          post_id: string
+          source_hash: string
+          source_updated_at: string
+          token_count: number
+          updated_at?: string
+        }
+        Update: {
+          chunk_index?: number
+          content?: string
+          content_hash?: string
+          created_at?: string
+          embedding?: string
+          embedding_model?: string
+          heading?: string
+          id?: string
+          locale?: Database["public"]["Enums"]["app_locale"]
+          metadata?: Json
+          post_id?: string
+          source_hash?: string
+          source_updated_at?: string
+          token_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_chunks_post_id_locale_fkey"
+            columns: ["post_id", "locale"]
+            isOneToOne: false
+            referencedRelation: "post_translations"
+            referencedColumns: ["post_id", "locale"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           id: string
@@ -307,6 +369,41 @@ export type Database = {
           },
         ]
       }
+      rag_index_queue: {
+        Row: {
+          attempts: number
+          last_error: string | null
+          locale: Database["public"]["Enums"]["app_locale"]
+          locked_until: string | null
+          post_id: string
+          requested_at: string
+        }
+        Insert: {
+          attempts?: number
+          last_error?: string | null
+          locale: Database["public"]["Enums"]["app_locale"]
+          locked_until?: string | null
+          post_id: string
+          requested_at?: string
+        }
+        Update: {
+          attempts?: number
+          last_error?: string | null
+          locale?: Database["public"]["Enums"]["app_locale"]
+          locked_until?: string | null
+          post_id?: string
+          requested_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rag_index_queue_post_id_locale_fkey"
+            columns: ["post_id", "locale"]
+            isOneToOne: false
+            referencedRelation: "post_translations"
+            referencedColumns: ["post_id", "locale"]
+          },
+        ]
+      }
     }
     Views: {
       published_post_cards: {
@@ -325,6 +422,58 @@ export type Database = {
       }
     }
     Functions: {
+      claim_rag_index_jobs: {
+        Args: { p_limit?: number }
+        Returns: {
+          locale: Database["public"]["Enums"]["app_locale"]
+          post_id: string
+          requested_at: string
+        }[]
+      }
+      enqueue_rag_index_jobs: {
+        Args: { p_post_ids?: string[] }
+        Returns: number
+      }
+      finish_rag_index_job: {
+        Args: {
+          p_error?: string
+          p_locale: Database["public"]["Enums"]["app_locale"]
+          p_post_id: string
+          p_requested_at: string
+        }
+        Returns: boolean
+      }
+      match_document_chunks: {
+        Args: {
+          filter_category_ids?: string[]
+          filter_locale?: Database["public"]["Enums"]["app_locale"]
+          filter_post_ids?: string[]
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          heading: string
+          id: string
+          locale: Database["public"]["Enums"]["app_locale"]
+          post_id: string
+          similarity: number
+          slug: string
+          title: string
+        }[]
+      }
+      replace_document_chunks: {
+        Args: {
+          p_chunks: Json
+          p_embedding_model: string
+          p_locale: Database["public"]["Enums"]["app_locale"]
+          p_post_id: string
+          p_source_hash: string
+          p_source_updated_at: string
+        }
+        Returns: boolean
+      }
       place_order: {
         Args: {
           p_customer: Json
