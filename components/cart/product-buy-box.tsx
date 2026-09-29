@@ -52,21 +52,9 @@ function ProductBuyBox({ initialProduct }: ProductBuyBoxProps) {
       aria-label={t("price")}
       className="mt-8 border-b border-white/14 pb-6"
     >
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <p className="font-heading text-2xl tabular-nums text-[#e7e9e3]">
-          {product?.priceVnd != null ? formatVnd(product.priceVnd, locale) : null}
-        </p>
-        <p
-          aria-live="polite"
-          className={
-            canBuy
-              ? "text-[11px] tracking-[0.24em] text-[#9da39a] uppercase"
-              : "text-[11px] tracking-[0.24em] text-[#e0867f] uppercase"
-          }
-        >
-          {status}
-        </p>
-      </div>
+      <p className="font-heading text-2xl tabular-nums text-[#e7e9e3]">
+        {product?.priceVnd != null ? formatVnd(product.priceVnd, locale) : null}
+      </p>
 
       <div className="mt-5 flex flex-wrap items-center gap-4">
         <QuantityStepper
@@ -89,9 +77,21 @@ function ProductBuyBox({ initialProduct }: ProductBuyBoxProps) {
           {t("addToCart")}
         </button>
       </div>
-      <p className="mt-3 text-xs text-[#9da39a]">
-        {t("maxPerOrder", { count: MAX_ITEM_QUANTITY })}
-      </p>
+      <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
+        <p className="text-xs text-[#9da39a]">
+          {t("maxPerOrder", { count: MAX_ITEM_QUANTITY })}
+        </p>
+        <p
+          aria-live="polite"
+          className={
+            canBuy
+              ? "text-[11px] tracking-[0.24em] text-[#9da39a] uppercase"
+              : "text-[11px] tracking-[0.24em] text-[#e0867f] uppercase"
+          }
+        >
+          {status}
+        </p>
+      </div>
     </section>
   );
 }
