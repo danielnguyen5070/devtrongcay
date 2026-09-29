@@ -50,7 +50,7 @@ function ProductBuyBox({ initialProduct }: ProductBuyBoxProps) {
   return (
     <section
       aria-label={t("price")}
-      className="mt-8 border-y border-white/14 py-6"
+      className="mt-8 border-b border-white/14 pb-6"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <p className="font-heading text-2xl tabular-nums text-[#e7e9e3]">

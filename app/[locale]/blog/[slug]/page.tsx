@@ -157,6 +157,20 @@ export default async function BlogPostPage({ params }: Props) {
           ) : null}
         </header>
 
+        {post.gallery.length > 0 ? (
+          <BentoGallery images={post.gallery} />
+        ) : (
+          <div className="relative mx-auto mt-10 flex aspect-square w-[72%] max-w-sm items-center justify-center">
+            <BlogImage
+              src={post.coverImage}
+              alt={post.title}
+              sizes="(max-width: 768px) 70vw, 384px"
+              className="h-full w-full"
+              priority
+            />
+          </div>
+        )}
+
         {post.product.productStatus !== "draft" && post.product.priceVnd !== null ? (
           <ProductBuyBox
             initialProduct={{
@@ -171,20 +185,6 @@ export default async function BlogPostPage({ params }: Props) {
             }}
           />
         ) : null}
-
-        {post.gallery.length > 0 ? (
-          <BentoGallery images={post.gallery} />
-        ) : (
-          <div className="relative mx-auto mt-10 flex aspect-square w-[72%] max-w-sm items-center justify-center">
-            <BlogImage
-              src={post.coverImage}
-              alt={post.title}
-              sizes="(max-width: 768px) 70vw, 384px"
-              className="h-full w-full"
-              priority
-            />
-          </div>
-        )}
 
         <div className="prose prose-invert mt-12 max-w-none prose-headings:font-heading prose-headings:font-normal prose-headings:tracking-tight prose-headings:text-[#e7e9e3] prose-p:font-sans prose-p:text-[#c4c9c0] prose-a:text-[#d6dad2] prose-strong:text-[#e7e9e3] prose-blockquote:border-white/20 prose-blockquote:text-[#9da39a] prose-code:text-[#e7e9e3] prose-li:text-[#c4c9c0] prose-hr:border-white/14">
           <MdxContent source={post.content} />
