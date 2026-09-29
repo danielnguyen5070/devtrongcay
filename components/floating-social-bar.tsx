@@ -1,11 +1,5 @@
 import type { ComponentType, SVGProps } from "react";
-import Image from "next/image";
-import { Link } from "@/i18n/navigation";
-import { SITE_NAME } from "@/lib/site";
 import { cn } from "@/lib/utils";
-
-const AVATAR_SRC = "/images/avatar.webp";
-const AVATAR_LABEL = SITE_NAME;
 
 type IconProps = SVGProps<SVGSVGElement>;
 
@@ -59,26 +53,6 @@ function XIcon(props: IconProps) {
   );
 }
 
-function LinkedInIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M6.34 9.2H3.56V20.5h2.78V9.2ZM4.95 3.5a1.72 1.72 0 1 0 0 3.44 1.72 1.72 0 0 0 0-3.44ZM20.44 20.5h-2.77v-5.5c0-1.31-.02-2.99-1.82-2.99-1.83 0-2.11 1.42-2.11 2.9v5.59H10.97V9.2h2.66v1.54h.04c.37-.7 1.27-1.44 2.62-1.44 2.8 0 3.32 1.84 3.32 4.24V20.5Z" />
-    </svg>
-  );
-}
-
-function GitHubIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12 2.2c-5.46 0-9.9 4.44-9.9 9.9 0 4.37 2.84 8.08 6.78 9.39.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.76.6-3.34-1.33-3.34-1.33-.45-1.15-1.1-1.46-1.1-1.46-.9-.62.07-.6.07-.6 1 .07 1.52 1.02 1.52 1.02.89 1.52 2.33 1.08 2.9.83.09-.65.35-1.08.63-1.33-2.2-.25-4.52-1.1-4.52-4.9 0-1.08.39-1.97 1.02-2.66-.1-.25-.44-1.27.1-2.65 0 0 .83-.27 2.73 1.01a9.5 9.5 0 0 1 4.97 0c1.9-1.28 2.73-1.01 2.73-1.01.54 1.38.2 2.4.1 2.65.64.69 1.02 1.58 1.02 2.66 0 3.81-2.32 4.65-4.53 4.9.36.31.67.92.67 1.85 0 1.34-.01 2.42-.01 2.75 0 .27.18.58.69.48A9.92 9.92 0 0 0 21.9 12.1c0-5.46-4.44-9.9-9.9-9.9Z"
-      />
-    </svg>
-  );
-}
-
 export type SocialLink = {
   name: string;
   href: string;
@@ -117,18 +91,6 @@ export const SOCIAL_LINKS: SocialLink[] = [
     color: "#000000",
     icon: XIcon,
   },
-  {
-    name: "LinkedIn",
-    href: "https://www.linkedin.com/in/viet-nguyen-hoang-077007437/",
-    color: "#0077b5",
-    icon: LinkedInIcon,
-  },
-  {
-    name: "GitHub",
-    href: "https://github.com/danielnguyen5070",
-    color: "#333333",
-    icon: GitHubIcon,
-  },
 ];
 
 type FloatingSocialBarProps = {
@@ -151,21 +113,6 @@ function FloatingSocialBar({
       )}
     >
       <div className="pointer-events-auto flex flex-col">
-        <Link
-          href="/"
-          aria-label={AVATAR_LABEL}
-          className="mb-2 block size-12 overflow-hidden bg-black shadow-[2px_3px_10px_rgba(0,0,0,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
-        >
-          <Image
-            src={AVATAR_SRC}
-            alt=""
-            width={48}
-            height={48}
-            className="size-12 object-cover"
-            priority
-          />
-        </Link>
-
         <ul className="group/social m-0 flex list-none flex-col p-0 shadow-[2px_3px_10px_rgba(0,0,0,0.28)]">
           {links.map((link) => {
             const Icon = link.icon;
