@@ -69,6 +69,10 @@ export default async function HomePage({ params }: Props) {
         posts={posts}
         label={t("gridLabel")}
         emptyLabel={blog("empty")}
+        searchLabel={t("search.label")}
+        searchPlaceholder={t("search.placeholder")}
+        clearSearchLabel={t("search.clear")}
+        noResultsLabel={t("search.noResults")}
       />
     </div>
   );

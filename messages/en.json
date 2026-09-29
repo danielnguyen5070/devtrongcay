@@ -6,6 +6,12 @@
   },
   "home": {
     "gridLabel": "Journal",
+    "search": {
+      "label": "Search posts",
+      "placeholder": "Search posts",
+      "clear": "Close search",
+      "noResults": "No matching posts."
+    },
     "metadata": {
       "title": "Dev Trong Cay | Monstera and tropical plant journal",
       "description": "A bilingual plant-growing journal focused on Monstera and tropical foliage: light, water, soil, and how to read each leaf.",

@@ -10,6 +10,8 @@ type ProximityScaleGridProps = {
   children: ReactNode;
   className?: string;
   "aria-label"?: string;
+  /** Changes whenever the rendered tiles change, so GSAP re-collects the images. */
+  itemsKey?: string;
 };
 
 const MAX_SCALE = 1.42;
@@ -19,6 +21,7 @@ function ProximityScaleGrid({
   children,
   className,
   "aria-label": ariaLabel,
+  itemsKey,
 }: ProximityScaleGridProps) {
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -101,7 +104,7 @@ function ProximityScaleGrid({
         stage.removeEventListener("mouseleave", onLeave);
       };
     },
-    { scope: stageRef },
+    { scope: stageRef, dependencies: [itemsKey], revertOnUpdate: true },
   );
 
   return (
