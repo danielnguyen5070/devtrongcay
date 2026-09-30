@@ -20,6 +20,7 @@ export type BlogProduct = {
 };
 
 export type BlogPost = BlogPostMeta & {
+  updatedAt?: string;
   content: string;
   gallery: BlogMedia[];
   product: BlogProduct;

@@ -13,15 +13,19 @@
       "noResults": "No matching posts."
     },
     "metadata": {
-      "title": "Dev Trong Cay | Monstera and tropical plant journal",
+      "title": "Cay Trong Nha | Monstera and tropical plant journal",
       "description": "A bilingual plant-growing journal focused on Monstera and tropical foliage: light, water, soil, and how to read each leaf.",
-      "ogImageAlt": "Dev Trong Cay blog grid of Monstera and tropical plant notes",
+      "ogImageAlt": "Cay Trong Nha: Monstera and tropical plant journal",
+      "ogTagline": "Monstera and tropical plant journal",
       "keywords": "Monstera, plant care, tropical plants, Thai Constellation, Albo, houseplants"
     }
   },
   "blog": {
-    "home": "Dev Trong Cay",
-    "back": "All notes",
+    "home": "Cay Trong Nha",
+    "breadcrumb": {
+      "label": "Breadcrumb",
+      "home": "Home"
+    },
     "empty": "No posts yet.",
     "notFound": "This post could not be found."
   },

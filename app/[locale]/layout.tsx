@@ -8,15 +8,18 @@ import { CartSync } from "@/components/cart/cart-sync";
 import { ChatButton } from "@/components/chat/chat-button";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { FloatingSocialBar } from "@/components/floating-social-bar";
+import { JsonLd } from "@/components/json-ld";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { routing } from "@/i18n/routing";
 import { fontVariables } from "@/lib/fonts";
+import { graph, organization, website } from "@/lib/seo/json-ld";
 import {
+  SITE_AUTHOR,
   SITE_NAME,
-  SITE_NAME_EN,
   absoluteUrl,
   getSiteUrl,
   isNoIndexSite,
+  siteNameFor,
 } from "@/lib/site";
 import "../globals.css";
 
@@ -36,7 +39,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home.metadata" });
-  const siteName = locale === "en" ? SITE_NAME_EN : SITE_NAME;
+  const siteName = siteNameFor(locale);
   const noIndex = isNoIndexSite();
 
   return {
@@ -48,6 +51,9 @@ export async function generateMetadata({
     description: t("description"),
     keywords: t("keywords"),
     applicationName: siteName,
+    authors: [{ name: SITE_AUTHOR, url: absoluteUrl("/") }],
+    creator: SITE_AUTHOR,
+    publisher: SITE_NAME,
     icons: {
       icon: [
         { url: "/images/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -115,10 +121,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   }
 
   const messages = await getMessages();
+  const t = await getTranslations({ locale, namespace: "home.metadata" });
 
   return (
     <html lang={locale} className={`${fontVariables} h-full dark antialiased`}>
       <body className="min-h-full bg-background font-sans text-foreground">
+        <JsonLd data={graph(organization(), website(locale, t("description")))} />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <FloatingSocialBar />
           <div className="site-actions">

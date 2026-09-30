@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { BentoGallery } from "@/components/blog/BentoGallery";
 import { BlogImage } from "@/components/blog-image";
 import { ProductBuyBox } from "@/components/cart/product-buy-box";
+import { JsonLd } from "@/components/json-ld";
 import { MdxContent } from "@/components/mdx-content";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
@@ -12,21 +13,14 @@ import {
   getPublishedPost,
   getPublishedSlugs,
 } from "@/lib/blog";
-import {
-  SITE_NAME,
-  SITE_NAME_EN,
-  alternateOgLocale,
-  localeToOg,
-} from "@/lib/site";
+import { blogPosting, breadcrumb, graph, product } from "@/lib/seo/json-ld";
+import { SITE_AUTHOR, absoluteUrl, localeToOg, siteNameFor } from "@/lib/site";
 
 export const revalidate = 3600;
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
-
-const OG_IMAGE_WIDTH = 1200;
-const OG_IMAGE_HEIGHT = 630;
 
 function toIsoDate(value: string | undefined) {
   if (!value) return undefined;
@@ -73,14 +67,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {};
   }
 
-  const siteName = locale === "en" ? SITE_NAME_EN : SITE_NAME;
+  const t = await getTranslations({ locale, namespace: "home.metadata" });
+  const siteName = siteNameFor(locale);
   const path = `/${locale}/blog/${slug}`;
   const image = post.coverImage;
-  const publishedTime = toIsoDate(post.date);
+  const keywords = [
+    ...(post.category ? [post.category] : []),
+    ...t("keywords").split(",").map((keyword) => keyword.trim()),
+  ];
+  const otherLocales = (await getPostLocales(slug)).filter((item) => item !== locale);
 
   return {
     title: post.title,
     description: post.description,
+    keywords,
+    authors: [{ name: SITE_AUTHOR, url: absoluteUrl("/") }],
     alternates: {
       canonical: path,
       languages: await blogPostLanguages(slug),
@@ -91,17 +92,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: path,
       siteName,
       locale: localeToOg(locale),
-      alternateLocale: [alternateOgLocale(locale)],
+      alternateLocale: otherLocales.map(localeToOg),
       type: "article",
-      publishedTime,
-      images: [
-        {
-          url: image,
-          width: OG_IMAGE_WIDTH,
-          height: OG_IMAGE_HEIGHT,
-          alt: post.title,
-        },
-      ],
+      publishedTime: toIsoDate(post.date),
+      modifiedTime: toIsoDate(post.updatedAt),
+      authors: [SITE_AUTHOR],
+      section: post.category || undefined,
+      images: [{ url: image, alt: post.title }],
     },
     twitter: {
       card: "summary_large_image",
@@ -124,13 +121,33 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <article className="article-shell">
+      <JsonLd
+        data={graph(
+          blogPosting(post, locale),
+          breadcrumb(locale, t("breadcrumb.home"), post),
+          product(post, locale),
+        )}
+      />
       <div className="article-frame">
-        <Link
-          href="/"
-          className="text-[11px] tracking-[0.3em] text-[#9da39a] uppercase transition-colors hover:text-[#e7e9e3]"
-        >
-          {t("back")}
-        </Link>
+        <nav aria-label={t("breadcrumb.label")}>
+          <ol className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-[11px] tracking-[0.3em] text-[#9da39a] uppercase">
+            <li>
+              <Link href="/" className="transition-colors hover:text-[#e7e9e3]">
+                {t("breadcrumb.home")}
+              </Link>
+            </li>
+            {post.category ? (
+              <>
+                <li aria-hidden="true">›</li>
+                <li>{post.category}</li>
+              </>
+            ) : null}
+            <li aria-hidden="true">›</li>
+            <li aria-current="page" className="min-w-0 max-w-full truncate text-[#d6dad2]">
+              {post.title}
+            </li>
+          </ol>
+        </nav>
 
         <header className="mt-10 border-t border-white/14 pt-10">
           {post.category ? (

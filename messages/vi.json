@@ -13,15 +13,19 @@
       "noResults": "Không tìm thấy bài viết phù hợp."
     },
     "metadata": {
-      "title": "Dev Trồng Cây | Blog trồng Monstera và cây nhiệt đới",
+      "title": "Cây Trong Nhà | Blog trồng Monstera và cây nhiệt đới",
       "description": "Ghi chép trồng cây, tập trung vào Monstera và các loài nhiệt đới: ánh sáng, tưới nước, giá thể, và cách đọc từng chiếc lá.",
-      "ogImageAlt": "Lưới bài viết Dev Trồng Cây về Monstera và cây nhiệt đới",
+      "ogImageAlt": "Cây Trong Nhà: blog trồng Monstera và cây nhiệt đới",
+      "ogTagline": "Blog trồng Monstera và cây nhiệt đới",
       "keywords": "Monstera, trồng cây, cây nhiệt đới, Thai Constellation, Albo, chăm sóc cây"
     }
   },
   "blog": {
-    "home": "Dev Trồng Cây",
-    "back": "Tất cả bài viết",
+    "home": "Cây Trong Nhà",
+    "breadcrumb": {
+      "label": "Đường dẫn",
+      "home": "Trang chủ"
+    },
     "empty": "Chưa có bài viết.",
     "notFound": "Không tìm thấy bài viết."
   },

@@ -23,6 +23,12 @@ function sortLocales(locales: Iterable<AppLocale>) {
   return routing.locales.filter((locale) => set.has(locale));
 }
 
+function latestDate(...values: string[]) {
+  return values.reduce((latest, value) =>
+    new Date(value).getTime() > new Date(latest).getTime() ? value : latest,
+  );
+}
+
 export const getPublishedPosts = cache(
   async (locale: string): Promise<BlogPostMeta[]> => {
     if (!hasLocale(routing.locales, locale)) return [];
@@ -72,6 +78,29 @@ export const getPublishedSlugs = cache(
   },
 );
 
+/** Published posts with the last-modified time of each translation. */
+export const getSitemapPosts = cache(
+  async (): Promise<{ slug: string; updatedAt: Partial<Record<AppLocale, string>> }[]> => {
+    const { data, error } = await getPublicSupabase()
+      .from("posts")
+      .select("slug, updated_at, translations:post_translations(locale, updated_at)")
+      .eq("status", "published")
+      .order("sort_order", { ascending: true })
+      .order("published_at", { ascending: false })
+      .order("slug");
+
+    if (error) queryFailed("sitemap posts", error);
+
+    return data.map((row) => {
+      const updatedAt: Partial<Record<AppLocale, string>> = {};
+      for (const translation of row.translations) {
+        updatedAt[translation.locale] = latestDate(row.updated_at, translation.updated_at);
+      }
+      return { slug: row.slug, updatedAt };
+    });
+  },
+);
+
 /** Locales in which a published post has a translation. */
 export const getPostLocales = cache(
   async (slug: string): Promise<AppLocale[]> => {
@@ -97,8 +126,8 @@ export const getPublishedPost = cache(
     const { data, error } = await getPublicSupabase()
       .from("posts")
       .select(
-        `id, slug, published_at, cover_image_url, price_vnd, stock, product_status,
-         translation:post_translations!inner(title, description, body),
+        `id, slug, published_at, updated_at, cover_image_url, price_vnd, stock, product_status,
+         translation:post_translations!inner(title, description, body, updated_at),
          category:categories(translations:category_translations(locale, name)),
          media:post_media(position, image_url, alt)`,
       )
@@ -120,6 +149,7 @@ export const getPublishedPost = cache(
       title: translation.title,
       description: translation.description,
       date: data.published_at ?? "",
+      updatedAt: latestDate(data.updated_at, translation.updated_at),
       coverImage: getCoverUrl(data.cover_image_url),
       category,
       content: translation.body,

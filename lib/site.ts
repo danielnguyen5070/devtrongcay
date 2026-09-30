@@ -1,17 +1,28 @@
-export const SITE_NAME = "Dev Trồng Cây";
-export const SITE_NAME_EN = "Dev Trong Cay";
+export const SITE_NAME = "Cây Trong Nhà";
+export const SITE_NAME_EN = "Cay Trong Nha";
+export const SITE_AUTHOR = SITE_NAME;
+export const SITE_LOGO_PATH = "/images/icon-512.png";
+export const PRODUCTION_SITE_URL = "https://caytrongnha.com";
+
+export function siteNameFor(locale: string) {
+  return locale === "en" ? SITE_NAME_EN : SITE_NAME;
+}
 
 /**
- * Canonical site origin for metadata, sitemap, and absolute URLs.
- * Optional until you have a custom domain:
+ * Canonical site origin for metadata, sitemap, and absolute URLs:
  * 1. NEXT_PUBLIC_SITE_URL when set
- * 2. VERCEL_URL on Vercel previews/production
- * 3. http://localhost:3000 locally
+ * 2. PRODUCTION_SITE_URL on Vercel production
+ * 3. VERCEL_URL on Vercel previews
+ * 4. http://localhost:3000 locally
  */
 export function getSiteUrl() {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (configured) {
     return configured.replace(/\/$/, "");
+  }
+
+  if (process.env.VERCEL_ENV === "production") {
+    return PRODUCTION_SITE_URL;
   }
 
   const vercel = process.env.VERCEL_URL?.trim();

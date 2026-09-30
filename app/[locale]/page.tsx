@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { BlogGrid } from "@/components/blog-grid";
+import { JsonLd } from "@/components/json-ld";
 import { routing } from "@/i18n/routing";
 import { getPublishedPosts } from "@/lib/blog";
-import { SITE_NAME, SITE_NAME_EN, localeToOg, alternateOgLocale } from "@/lib/site";
+import { graph, postList } from "@/lib/seo/json-ld";
+import { alternateOgLocale, localeToOg, siteNameFor } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -14,7 +16,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home.metadata" });
-  const siteName = locale === "en" ? SITE_NAME_EN : SITE_NAME;
+  const siteName = siteNameFor(locale);
   const path = `/${locale}`;
 
   return {
@@ -39,20 +41,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: localeToOg(locale),
       alternateLocale: [alternateOgLocale(locale)],
       type: "website",
-      images: [
-        {
-          url: "/images/og-home.svg",
-          width: 1200,
-          height: 630,
-          alt: t("ogImageAlt"),
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
-      images: ["/images/og-home.svg"],
     },
   };
 }
@@ -65,6 +58,7 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <div className="home-page">
+      <JsonLd data={graph(postList(locale, posts))} />
       <BlogGrid
         posts={posts}
         label={t("gridLabel")}
