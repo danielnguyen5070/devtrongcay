@@ -5,6 +5,8 @@ export type BlogPostMeta = {
   date: string;
   coverImage: string;
   category: string;
+  /** Genus-abbreviated botanical name, e.g. "P. ridleyi"; empty for care articles. */
+  scientificNameShort: string;
 };
 
 export type BlogMedia = {

@@ -104,7 +104,9 @@ function BlogGrid({
     () =>
       posts.map((post) => ({
         post,
-        text: normalize(`${post.title} ${post.description} ${post.category}`),
+        text: normalize(
+          `${post.title} ${post.scientificNameShort} ${post.description} ${post.category}`,
+        ),
       })),
     [posts],
   );

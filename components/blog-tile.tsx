@@ -8,15 +8,17 @@ type BlogTileProps = {
 };
 
 function BlogTile({ post, priority = false }: BlogTileProps) {
+  const label = post.scientificNameShort || post.title;
+
   return (
     <Link
       href={`/blog/${post.slug}`}
       className="blog-tile"
-      aria-label={post.title}
+      aria-label={label}
     >
       <BlogImage src={post.coverImage} alt={post.title} priority={priority} />
       <div className="blog-tile-label">
-        <span>{post.title}</span>
+        <span>{label}</span>
       </div>
     </Link>
   );

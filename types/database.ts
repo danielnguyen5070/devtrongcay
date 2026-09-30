@@ -325,6 +325,8 @@ export type Database = {
           price_vnd: number | null
           product_status: Database["public"]["Enums"]["product_status"]
           published_at: string | null
+          scientific_name: string | null
+          scientific_name_short: string | null
           slug: string
           sort_order: number
           status: Database["public"]["Enums"]["post_status"]
@@ -339,6 +341,8 @@ export type Database = {
           price_vnd?: number | null
           product_status?: Database["public"]["Enums"]["product_status"]
           published_at?: string | null
+          scientific_name?: string | null
+          scientific_name_short?: never
           slug: string
           sort_order?: number
           status?: Database["public"]["Enums"]["post_status"]
@@ -353,6 +357,8 @@ export type Database = {
           price_vnd?: number | null
           product_status?: Database["public"]["Enums"]["product_status"]
           published_at?: string | null
+          scientific_name?: string | null
+          scientific_name_short?: never
           slug?: string
           sort_order?: number
           status?: Database["public"]["Enums"]["post_status"]
@@ -414,6 +420,7 @@ export type Database = {
           id: string | null
           locale: Database["public"]["Enums"]["app_locale"] | null
           published_at: string | null
+          scientific_name_short: string | null
           slug: string | null
           sort_order: number | null
           title: string | null

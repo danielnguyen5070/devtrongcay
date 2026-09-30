@@ -35,7 +35,9 @@ export const getPublishedPosts = cache(
 
     const { data, error } = await getPublicSupabase()
       .from("published_post_cards")
-      .select("slug, published_at, cover_image_url, title, description, category_name")
+      .select(
+        "slug, published_at, cover_image_url, title, description, category_name, scientific_name_short",
+      )
       .eq("locale", locale)
       .order("sort_order", { ascending: true })
       .order("published_at", { ascending: false })
@@ -53,6 +55,7 @@ export const getPublishedPosts = cache(
               date: row.published_at ?? "",
               coverImage: getCoverUrl(row.cover_image_url),
               category: row.category_name ?? "",
+              scientificNameShort: row.scientific_name_short ?? "",
             },
           ]
         : [],
@@ -127,6 +130,7 @@ export const getPublishedPost = cache(
       .from("posts")
       .select(
         `id, slug, published_at, updated_at, cover_image_url, price_vnd, stock, product_status,
+         scientific_name_short,
          translation:post_translations!inner(title, description, body, updated_at),
          category:categories(translations:category_translations(locale, name)),
          media:post_media(position, image_url, alt)`,
@@ -152,6 +156,7 @@ export const getPublishedPost = cache(
       updatedAt: latestDate(data.updated_at, translation.updated_at),
       coverImage: getCoverUrl(data.cover_image_url),
       category,
+      scientificNameShort: data.scientific_name_short ?? "",
       content: translation.body,
       gallery: [...data.media]
         .sort((a, b) => a.position - b.position)
