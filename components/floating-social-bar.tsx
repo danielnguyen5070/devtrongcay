@@ -45,14 +45,6 @@ function InstagramIcon(props: IconProps) {
   );
 }
 
-function XIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M17.6 3.5h2.7l-5.9 6.75L21.7 20.5h-5.2l-4.07-5.32L7.8 20.5H5.1l6.32-7.22L2.4 3.5h5.33l3.68 4.87L17.6 3.5Zm-.95 15.27h1.5L7.5 5.13H5.9l10.75 13.64Z" />
-    </svg>
-  );
-}
-
 export type SocialLink = {
   name: string;
   href: string;
@@ -63,31 +55,25 @@ export type SocialLink = {
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: "Facebook",
-    href: "https://www.facebook.com/viet.nguyen.555528",
+    href: "https://www.facebook.com/caytrongnha98",
     color: "#3b5998",
     icon: FacebookIcon,
   },
   {
     name: "TikTok",
-    href: "https://www.tiktok.com/@viet.nguyen.hoang49",
+    href: "https://www.tiktok.com/@caytrongnha98",
     color: "#010101",
     icon: TikTokIcon,
   },
   {
     name: "YouTube",
-    href: "https://www.youtube.com/@vietcode98",
+    href: "https://www.youtube.com/@cay.trong.nha98",
     color: "#ff0000",
     icon: YouTubeIcon,
   },
   {
-    name: "X",
-    href: "https://x.com/VietNguyenwzaa",
-    color: "#000000",
-    icon: XIcon,
-  },
-  {
     name: "Instagram",
-    href: "https://www.instagram.com/nguyenviet4711/",
+    href: "https://www.instagram.com/cay.trong.nha",
     color: "#e1306c",
     icon: InstagramIcon,
   },
