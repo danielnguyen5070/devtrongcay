@@ -1,17 +1,11 @@
-import { timingSafeEqual } from "node:crypto";
 import { after } from "next/server";
 import { SYNC_MAX_JOBS_PER_RUN } from "@/lib/rag/config";
 import { processQueue } from "@/lib/rag/indexer";
+import { isAuthorized } from "@/lib/webhook-auth";
 
 export const maxDuration = 60;
 
 const NO_STORE = { "Cache-Control": "no-store" };
-
-function isAuthorized(request: Request, secret: string) {
-  const received = Buffer.from(request.headers.get("authorization") ?? "");
-  const expected = Buffer.from(`Bearer ${secret}`);
-  return received.length === expected.length && timingSafeEqual(received, expected);
-}
 
 /**
  * Called by the Supabase Database Webhook on rag_index_queue (and optionally

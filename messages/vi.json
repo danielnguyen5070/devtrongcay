@@ -37,6 +37,32 @@
     "addToCart": "Thêm vào giỏ",
     "maxPerOrder": "Tối đa {count} cây mỗi đơn"
   },
+  "reviews": {
+    "title": "Đánh giá",
+    "summary": "{average} trên 5 · {count} đánh giá",
+    "stars": "{rating} trên 5 sao",
+    "empty": "Chưa có đánh giá nào. Hãy là người đầu tiên chia sẻ trải nghiệm.",
+    "formTitle": "Viết đánh giá",
+    "name": "Tên của bạn",
+    "rating": "Chấm điểm",
+    "ratingOption": "{rating} sao",
+    "comment": "Nhận xét",
+    "honeypot": "Để trống ô này",
+    "submit": "Gửi đánh giá",
+    "submitting": "Đang gửi…",
+    "successTitle": "Cảm ơn bạn đã đánh giá",
+    "successNote": "Đánh giá sẽ hiển thị sau khi được duyệt.",
+    "writeAnother": "Viết đánh giá khác",
+    "errors": {
+      "name": "Vui lòng nhập tên (tối đa 80 ký tự).",
+      "rating": "Vui lòng chọn từ 1 đến 5 sao.",
+      "comment": "Vui lòng nhập nhận xét (tối đa 2000 ký tự).",
+      "invalid": "Vui lòng kiểm tra các trường được đánh dấu.",
+      "rate_limited": "Bạn gửi đánh giá quá nhanh. Vui lòng thử lại sau vài phút.",
+      "not_found": "Không tìm thấy bài viết này.",
+      "generic": "Không thể gửi đánh giá. Vui lòng thử lại."
+    }
+  },
   "cart": {
     "title": "Giỏ hàng",
     "open": "Mở giỏ hàng, {count, plural, =0 {đang trống} other {# sản phẩm}}",

@@ -1,7 +1,7 @@
 import { SOCIAL_LINKS } from "@/components/floating-social-bar";
 import { calculateShippingFee } from "@/lib/pricing";
 import { SITE_LOGO_PATH, SITE_NAME, absoluteUrl, siteNameFor } from "@/lib/site";
-import type { BlogPost, BlogPostMeta } from "@/types/blog";
+import type { BlogPost, BlogPostMeta, PostReviewSummary } from "@/types/blog";
 
 type JsonLdNode = Record<string, unknown>;
 
@@ -115,8 +115,40 @@ function availability(product: BlogPost["product"]) {
   return `${SCHEMA}/InStock`;
 }
 
+const MAX_JSON_LD_REVIEWS = 5;
+
+function reviewNodes(reviews: PostReviewSummary): JsonLdNode {
+  if (reviews.count === 0) return {};
+
+  return {
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: reviews.average,
+      reviewCount: reviews.count,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    review: reviews.reviews.slice(0, MAX_JSON_LD_REVIEWS).map((review) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: review.authorName },
+      datePublished: toIsoDate(review.createdAt),
+      reviewBody: review.comment,
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.rating,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    })),
+  };
+}
+
 /** Null when the post is not sold (draft product or no price). */
-export function product(post: BlogPost, locale: string): JsonLdNode | null {
+export function product(
+  post: BlogPost,
+  locale: string,
+  reviews: PostReviewSummary,
+): JsonLdNode | null {
   const { priceVnd, productStatus } = post.product;
   if (productStatus === "draft" || priceVnd === null) return null;
 
@@ -161,5 +193,6 @@ export function product(post: BlogPost, locale: string): JsonLdNode | null {
         },
       },
     },
+    ...reviewNodes(reviews),
   };
 }

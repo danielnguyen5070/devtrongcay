@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BentoGallery } from "@/components/blog/BentoGallery";
+import { PostReviews } from "@/components/blog/post-reviews";
 import { BlogImage } from "@/components/blog-image";
 import { ProductBuyBox } from "@/components/cart/product-buy-box";
 import { JsonLd } from "@/components/json-ld";
@@ -13,6 +14,8 @@ import {
   getPublishedPost,
   getPublishedSlugs,
 } from "@/lib/blog";
+import { formatDate } from "@/lib/date";
+import { getApprovedReviews } from "@/lib/reviews";
 import { blogPosting, breadcrumb, graph, product } from "@/lib/seo/json-ld";
 import { SITE_AUTHOR, absoluteUrl, localeToOg, siteNameFor } from "@/lib/site";
 
@@ -27,17 +30,6 @@ function toIsoDate(value: string | undefined) {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return undefined;
   return parsed.toISOString();
-}
-
-function formatDate(value: string, locale: string) {
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return value;
-
-  return new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(parsed);
 }
 
 async function blogPostLanguages(slug: string) {
@@ -118,6 +110,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   const t = await getTranslations("blog");
+  const reviews = await getApprovedReviews(post.product.id);
 
   return (
     <article className="article-shell">
@@ -125,7 +118,7 @@ export default async function BlogPostPage({ params }: Props) {
         data={graph(
           blogPosting(post, locale),
           breadcrumb(locale, t("breadcrumb.home"), post),
-          product(post, locale),
+          product(post, locale, reviews),
         )}
       />
       <div className="article-frame">
@@ -206,6 +199,8 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="prose prose-invert mt-12 max-w-none prose-headings:font-heading prose-headings:font-normal prose-headings:tracking-tight prose-headings:text-[#e7e9e3] prose-p:font-sans prose-p:text-[#c4c9c0] prose-a:text-[#d6dad2] prose-strong:text-[#e7e9e3] prose-blockquote:border-white/20 prose-blockquote:text-[#9da39a] prose-code:text-[#e7e9e3] prose-li:text-[#c4c9c0] prose-hr:border-white/14">
           <MdxContent source={post.content} />
         </div>
+
+        <PostReviews locale={locale} slug={post.slug} summary={reviews} />
       </div>
     </article>
   );

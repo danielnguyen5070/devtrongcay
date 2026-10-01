@@ -271,6 +271,57 @@ export type Database = {
           },
         ]
       }
+      post_reviews: {
+        Row: {
+          author_name: string
+          comment: string
+          created_at: string
+          id: string
+          locale: Database["public"]["Enums"]["app_locale"]
+          post_id: string
+          rating: number
+          status: Database["public"]["Enums"]["review_status"]
+          updated_at: string
+        }
+        Insert: {
+          author_name: string
+          comment: string
+          created_at?: string
+          id?: string
+          locale: Database["public"]["Enums"]["app_locale"]
+          post_id: string
+          rating: number
+          status?: Database["public"]["Enums"]["review_status"]
+          updated_at?: string
+        }
+        Update: {
+          author_name?: string
+          comment?: string
+          created_at?: string
+          id?: string
+          locale?: Database["public"]["Enums"]["app_locale"]
+          post_id?: string
+          rating?: number
+          status?: Database["public"]["Enums"]["review_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_reviews_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_reviews_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "published_post_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_translations: {
         Row: {
           body: string
@@ -503,6 +554,7 @@ export type Database = {
       payment_method: "cod" | "bank_transfer"
       post_status: "draft" | "published"
       product_status: "draft" | "active" | "archived"
+      review_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -641,6 +693,7 @@ export const Constants = {
       payment_method: ["cod", "bank_transfer"],
       post_status: ["draft", "published"],
       product_status: ["draft", "active", "archived"],
+      review_status: ["pending", "approved", "rejected"],
     },
   },
 } as const

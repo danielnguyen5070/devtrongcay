@@ -37,6 +37,32 @@
     "addToCart": "Add to cart",
     "maxPerOrder": "Up to {count} per order"
   },
+  "reviews": {
+    "title": "Reviews",
+    "summary": "{average} out of 5 · {count, plural, one {# review} other {# reviews}}",
+    "stars": "{rating} out of 5 stars",
+    "empty": "No reviews yet. Be the first to share your experience.",
+    "formTitle": "Write a review",
+    "name": "Your name",
+    "rating": "Rating",
+    "ratingOption": "{rating, plural, one {# star} other {# stars}}",
+    "comment": "Comment",
+    "honeypot": "Leave this field empty",
+    "submit": "Submit review",
+    "submitting": "Submitting…",
+    "successTitle": "Thanks for your review",
+    "successNote": "It will appear here once it has been approved.",
+    "writeAnother": "Write another review",
+    "errors": {
+      "name": "Please enter your name (up to 80 characters).",
+      "rating": "Please choose 1 to 5 stars.",
+      "comment": "Please write a comment (up to 2000 characters).",
+      "invalid": "Please check the highlighted fields.",
+      "rate_limited": "You are sending reviews too quickly. Please try again in a few minutes.",
+      "not_found": "This post could not be found.",
+      "generic": "Could not submit your review. Please try again."
+    }
+  },
   "cart": {
     "title": "Cart",
     "open": "Open cart, {count, plural, =0 {empty} one {# item} other {# items}}",

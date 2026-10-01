@@ -21,6 +21,21 @@ export type BlogProduct = {
   productStatus: "draft" | "active" | "archived";
 };
 
+export type PostReview = {
+  id: string;
+  authorName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+};
+
+export type PostReviewSummary = {
+  reviews: PostReview[];
+  count: number;
+  /** Mean rating rounded to one decimal; 0 when there are no reviews. */
+  average: number;
+};
+
 export type BlogPost = BlogPostMeta & {
   updatedAt?: string;
   content: string;
