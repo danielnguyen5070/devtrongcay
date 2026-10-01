@@ -8,6 +8,7 @@ import { CartSync } from "@/components/cart/cart-sync";
 import { ChatButton } from "@/components/chat/chat-button";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { FloatingSocialBar } from "@/components/floating-social-bar";
+import { GoogleAnalytics } from "@/components/google-analytics";
 import { JsonLd } from "@/components/json-ld";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { routing } from "@/i18n/routing";
@@ -139,6 +140,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <ChatPanel />
           <CartSync />
         </NextIntlClientProvider>
+        {!isNoIndexSite() && <GoogleAnalytics />}
       </body>
     </html>
   );
