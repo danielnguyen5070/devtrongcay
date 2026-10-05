@@ -16,6 +16,7 @@ function ChatPanel() {
   const locale = useLocale();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const isOpen = useChatStore((state) => state.isOpen);
   const close = useChatStore((state) => state.close);
   const [input, setInput] = useState("");
@@ -30,7 +31,10 @@ function ChatPanel() {
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    if (isOpen && !dialog.open) dialog.showModal();
+    if (isOpen && !dialog.open) {
+      dialog.showModal();
+      inputRef.current?.focus();
+    }
     if (!isOpen && dialog.open) dialog.close();
   }, [isOpen]);
 
@@ -146,6 +150,7 @@ function ChatPanel() {
         >
           <div className="flex items-end gap-3">
             <textarea
+              ref={inputRef}
               value={input}
               onChange={(event) => setInput(event.target.value)}
               onKeyDown={(event) => {
@@ -155,10 +160,10 @@ function ChatPanel() {
                 }
               }}
               maxLength={MAX_USER_MESSAGE_CHARS}
-              rows={2}
+              rows={1}
               placeholder={t("placeholder")}
               aria-label={t("placeholder")}
-              className="min-h-[44px] flex-1 resize-none border border-white/14 bg-transparent px-3 py-2 text-sm text-[#e7e9e3] placeholder:text-[#6f756d] focus:border-white/30 focus:outline-none"
+              className="h-[44px] flex-1 resize-none border border-white/14 bg-transparent px-3 py-[11px] text-sm leading-5 text-[#e7e9e3] placeholder:text-[#6f756d] focus:border-white/30 focus:outline-none"
             />
             {busy ? (
               <button
