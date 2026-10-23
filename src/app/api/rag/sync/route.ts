@@ -1,5 +1,5 @@
 import { after } from "next/server";
-import { processQueue, SYNC_MAX_JOBS_PER_RUN } from "@/features/rag";
+import { processQueue, SYNC_MAX_JOBS_PER_RUN } from "@/features/chat";
 import { isAuthorized } from "@/lib/webhook-auth";
 
 export const maxDuration = 60;

@@ -9,7 +9,7 @@
  * sits below most "expected" scores and above most "other" scores.
  */
 import type { AppLocale } from "@/i18n/routing";
-import { detectLocale, MATCH_THRESHOLD, rankForEval } from "@/features/rag";
+import { detectLocale, MATCH_THRESHOLD, rankForEval } from "@/features/chat";
 
 type Case = { question: string; expected: string; pageLocale: AppLocale };
 

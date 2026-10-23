@@ -3,7 +3,7 @@ import { routing, type AppLocale } from "@/i18n/routing";
 import { isSellable, type LiveProduct } from "@/features/cart";
 import { getCoverUrl } from "@/lib/media";
 import { formatVnd } from "@/lib/pricing";
-import { findPostIdsByName } from "@/features/rag";
+import { findPostIdsByName } from "./rag/search";
 import { getPublicSupabase } from "@/lib/supabase/public";
 
 export type ProductInfo = {

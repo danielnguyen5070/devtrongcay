@@ -16,7 +16,7 @@ import {
   processQueue,
   pruneChunks,
   type QueueRunSummary,
-} from "@/features/rag";
+} from "@/features/chat";
 
 const args = process.argv.slice(2);
 const has = (flag: string) => args.includes(flag);
