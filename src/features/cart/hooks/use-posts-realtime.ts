@@ -3,8 +3,8 @@
 import { useEffect, useId } from "react";
 import { useCartStore } from "../lib/store";
 import { getCoverUrl } from "@/lib/media";
-import { getBrowserSupabase } from "@/lib/supabase/browser";
-import type { Tables } from "@/types/database";
+import { createClient } from "@/lib/supabase/client";
+import type { Tables } from "@/lib/supabase/database.types";
 
 /**
  * Keeps price, stock, status and cover image of the given posts live in the
@@ -17,7 +17,7 @@ export function usePostsRealtime(postIds: string[]) {
   useEffect(() => {
     if (!key) return;
 
-    const supabase = getBrowserSupabase();
+    const supabase = createClient();
     const channel = supabase
       .channel(`posts-live${channelId}`)
       .on(

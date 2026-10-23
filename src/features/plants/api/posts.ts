@@ -3,7 +3,7 @@ import { cache } from "react";
 import { hasLocale } from "next-intl";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { getCoverUrl } from "@/lib/media";
-import { getPublicSupabase } from "@/lib/supabase/public";
+import { createStaticClient } from "@/lib/supabase/server";
 import type { BlogPost, BlogPostMeta } from "../types";
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -14,7 +14,7 @@ function isValidSlug(slug: string) {
 
 /** Logs the database error server-side and throws a generic one. */
 function queryFailed(what: string, error: { message: string; code?: string }): never {
-  console.error(`[blog] Failed to load ${what}: ${error.message}`, error.code ?? "");
+  console.error(`[plants] Failed to load ${what}: ${error.message}`, error.code ?? "");
   throw new Error(`Failed to load ${what}.`);
 }
 
@@ -33,7 +33,7 @@ export const getPublishedPosts = cache(
   async (locale: string): Promise<BlogPostMeta[]> => {
     if (!hasLocale(routing.locales, locale)) return [];
 
-    const { data, error } = await getPublicSupabase()
+    const { data, error } = await createStaticClient()
       .from("published_post_cards")
       .select(
         "slug, published_at, cover_image_url, title, description, category_name, scientific_name_short",
@@ -66,7 +66,7 @@ export const getPublishedPosts = cache(
 /** Every published (locale, slug) pair, in display order. */
 export const getPublishedSlugs = cache(
   async (): Promise<{ locale: AppLocale; slug: string }[]> => {
-    const { data, error } = await getPublicSupabase()
+    const { data, error } = await createStaticClient()
       .from("published_post_cards")
       .select("slug, locale")
       .order("sort_order", { ascending: true })
@@ -84,7 +84,7 @@ export const getPublishedSlugs = cache(
 /** Published posts with the last-modified time of each translation. */
 export const getSitemapPosts = cache(
   async (): Promise<{ slug: string; updatedAt: Partial<Record<AppLocale, string>> }[]> => {
-    const { data, error } = await getPublicSupabase()
+    const { data, error } = await createStaticClient()
       .from("posts")
       .select("slug, updated_at, translations:post_translations(locale, updated_at)")
       .eq("status", "published")
@@ -109,7 +109,7 @@ export const getPostLocales = cache(
   async (slug: string): Promise<AppLocale[]> => {
     if (!isValidSlug(slug)) return [];
 
-    const { data, error } = await getPublicSupabase()
+    const { data, error } = await createStaticClient()
       .from("published_post_cards")
       .select("locale")
       .eq("slug", slug);
@@ -126,7 +126,7 @@ export const getPublishedPost = cache(
       return null;
     }
 
-    const { data, error } = await getPublicSupabase()
+    const { data, error } = await createStaticClient()
       .from("posts")
       .select(
         `id, slug, published_at, updated_at, cover_image_url, price_vnd, stock, product_status,

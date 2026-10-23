@@ -1,4 +1,4 @@
-export { placeOrder } from "./checkout-actions";
+export { placeOrder } from "./api/place-order";
 export {
   initialPlaceOrderState,
   type CheckoutField,
@@ -9,7 +9,7 @@ export { CartDrawer } from "./components/cart-drawer";
 export { CartSync } from "./components/cart-sync";
 export { CheckoutForm } from "./components/checkout-form";
 export { ProductBuyBox } from "./components/product-buy-box";
-export { quoteCart } from "./lib/quote";
+export { quoteCart } from "./api/quote";
 export {
   CART_STORAGE_KEY,
   selectItemCount,

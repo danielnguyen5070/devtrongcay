@@ -2,10 +2,10 @@
 
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
-import { quoteCart, type CartQuote } from "./lib/quote";
-import { parseCartItems } from "./lib/types";
-import { getAdminSupabase } from "@/lib/supabase/admin";
-import type { CheckoutError, CheckoutField, PlaceOrderState } from "./checkout-state";
+import { quoteCart, type CartQuote } from "./quote";
+import { parseCartItems } from "../lib/types";
+import { createAdminClient } from "@/lib/supabase/admin";
+import type { CheckoutError, CheckoutField, PlaceOrderState } from "../checkout-state";
 
 const PAYMENT_METHODS = ["cod", "bank_transfer"] as const;
 const RPC_ERRORS = ["unavailable", "insufficient_stock", "price_changed"] as const;
@@ -86,7 +86,7 @@ export async function placeOrder(
       : [],
   );
 
-  const { data: code, error } = await getAdminSupabase().rpc("place_order", {
+  const { data: code, error } = await createAdminClient().rpc("place_order", {
     p_customer: {
       customer_name: customerName,
       phone,

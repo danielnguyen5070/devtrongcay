@@ -1,24 +1,18 @@
 import "server-only";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database";
+import type { Database } from "@/lib/supabase/database.types";
+import { getSupabaseSecretKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 let client: SupabaseClient<Database> | undefined;
 
 /**
- * Service-role client. Bypasses RLS, so use it only for server-side writes
- * that have already been validated (placing orders).
+ * Service-role client. Bypasses RLS — use only for validated server writes
+ * (place_order, RAG indexer/search, privileged webhooks).
  */
-export function getAdminSupabase() {
+export function createAdminClient() {
   if (client) return client;
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const key = process.env.SUPABASE_SECRET_KEY?.trim();
-
-  if (!url || !key) {
-    throw new Error("NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY must be set.");
-  }
-
-  client = createClient<Database>(url, key, {
+  client = createClient<Database>(getSupabaseUrl(), getSupabaseSecretKey(), {
     auth: {
       persistSession: false,
       autoRefreshToken: false,

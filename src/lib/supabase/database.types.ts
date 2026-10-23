@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -393,7 +393,7 @@ export type Database = {
           product_status?: Database["public"]["Enums"]["product_status"]
           published_at?: string | null
           scientific_name?: string | null
-          scientific_name_short?: never
+          scientific_name_short?: string | null
           slug: string
           sort_order?: number
           status?: Database["public"]["Enums"]["post_status"]
@@ -409,7 +409,7 @@ export type Database = {
           product_status?: Database["public"]["Enums"]["product_status"]
           published_at?: string | null
           scientific_name?: string | null
-          scientific_name_short?: never
+          scientific_name_short?: string | null
           slug?: string
           sort_order?: number
           status?: Database["public"]["Enums"]["post_status"]
@@ -455,7 +455,7 @@ export type Database = {
           {
             foreignKeyName: "rag_index_queue_post_id_locale_fkey"
             columns: ["post_id", "locale"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "post_translations"
             referencedColumns: ["post_id", "locale"]
           },
@@ -521,6 +521,30 @@ export type Database = {
           title: string
         }[]
       }
+      place_order: {
+        Args: {
+          p_customer: Json
+          p_lines: Json
+          p_shipping_fee_vnd: number
+          p_subtotal_vnd: number
+          p_total_vnd: number
+        }
+        Returns: string
+      }
+      rag_enqueue_category: {
+        Args: {
+          p_category_id: string
+          p_locale: Database["public"]["Enums"]["app_locale"]
+        }
+        Returns: undefined
+      }
+      rag_enqueue_translation: {
+        Args: {
+          p_locale: Database["public"]["Enums"]["app_locale"]
+          p_post_id: string
+        }
+        Returns: undefined
+      }
       replace_document_chunks: {
         Args: {
           p_chunks: Json
@@ -532,13 +556,13 @@ export type Database = {
         }
         Returns: boolean
       }
-      place_order: {
+      submit_review: {
         Args: {
-          p_customer: Json
-          p_lines: Json
-          p_shipping_fee_vnd: number
-          p_subtotal_vnd: number
-          p_total_vnd: number
+          p_author_name: string
+          p_comment: string
+          p_locale: Database["public"]["Enums"]["app_locale"]
+          p_rating: number
+          p_slug: string
         }
         Returns: string
       }

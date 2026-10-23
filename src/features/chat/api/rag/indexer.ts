@@ -3,7 +3,7 @@ import type { AppLocale } from "@/i18n/routing";
 import { buildChunks, sourceHash, type Chunk, type ChunkSource } from "./chunking";
 import { EMBEDDING_MODEL, SYNC_BATCH_SIZE } from "./config";
 import { embedDocuments, toVectorLiteral } from "./embeddings";
-import { getAdminSupabase } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export type IndexOutcome =
   /** Chunks were (re)written. */
@@ -29,7 +29,7 @@ function fail(what: string, error: { message: string; code?: string }): never {
 }
 
 async function loadSource(postId: string, locale: AppLocale): Promise<LoadedSource | null> {
-  const { data, error } = await getAdminSupabase()
+  const { data, error } = await createAdminClient()
     .from("post_translations")
     .select(
       `title, description, body, updated_at,
@@ -63,7 +63,7 @@ async function loadSource(postId: string, locale: AppLocale): Promise<LoadedSour
 }
 
 async function deleteChunks(postId: string, locale?: AppLocale) {
-  let query = getAdminSupabase().from("document_chunks").delete().eq("post_id", postId);
+  let query = createAdminClient().from("document_chunks").delete().eq("post_id", postId);
   if (locale) query = query.eq("locale", locale);
   const { error } = await query;
   if (error) fail("delete chunks", error);
@@ -80,7 +80,7 @@ export async function previewTranslation(postId: string, locale: AppLocale) {
  * chunks whose text is unchanged reuse their stored embedding.
  */
 export async function indexTranslation(postId: string, locale: AppLocale): Promise<IndexOutcome> {
-  const supabase = getAdminSupabase();
+  const supabase = createAdminClient();
   const loaded = await loadSource(postId, locale);
 
   if (!loaded || !loaded.published) {
@@ -157,7 +157,7 @@ export type QueueRunSummary = {
 
 /** Drains rag_index_queue. Safe to run concurrently: jobs are leased with SKIP LOCKED. */
 export async function processQueue(maxJobs = Number.POSITIVE_INFINITY): Promise<QueueRunSummary> {
-  const supabase = getAdminSupabase();
+  const supabase = createAdminClient();
   const summary: QueueRunSummary = { processed: 0, failed: 0, outcomes: [] };
 
   while (summary.processed < maxJobs) {
@@ -198,7 +198,7 @@ export async function processQueue(maxJobs = Number.POSITIVE_INFINITY): Promise<
 
 /** Queues every published translation (or those of the given posts). */
 export async function enqueueAll(postIds?: string[]) {
-  const { data, error } = await getAdminSupabase().rpc("enqueue_rag_index_jobs", {
+  const { data, error } = await createAdminClient().rpc("enqueue_rag_index_jobs", {
     p_post_ids: postIds,
   });
   if (error) fail("enqueue index jobs", error);
@@ -207,7 +207,7 @@ export async function enqueueAll(postIds?: string[]) {
 
 /** Deletes chunks from another embedding model or of posts that are no longer published. */
 export async function pruneChunks() {
-  const supabase = getAdminSupabase();
+  const supabase = createAdminClient();
 
   const { count: modelCount, error: modelError } = await supabase
     .from("document_chunks")
@@ -239,7 +239,7 @@ export async function pruneChunks() {
 
 /** Published (post, locale) pairs, optionally for one slug. */
 export async function listPublishedTranslations(slug?: string) {
-  let query = getAdminSupabase()
+  let query = createAdminClient()
     .from("post_translations")
     .select("post_id, locale, post:posts!inner(slug, status)")
     .eq("post.status", "published");

@@ -10,7 +10,7 @@ import {
   getPublishedSlugs,
   MdxContent,
   PostReviews,
-} from "@/features/blog";
+} from "@/features/plants";
 import { ProductBuyBox } from "@/features/cart";
 import { JsonLd } from "@/components/json-ld";
 import { Link } from "@/i18n/navigation";

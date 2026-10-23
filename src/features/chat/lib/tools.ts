@@ -2,9 +2,9 @@ import "server-only";
 import { tool, type InferUITools } from "ai";
 import { z } from "zod";
 import type { AppLocale } from "@/i18n/routing";
-import { findProducts } from "./products";
-import { detectLocale } from "./rag/language";
-import { searchKnowledge } from "./rag/search";
+import { findProducts } from "../api/products";
+import { detectLocale } from "../api/rag/language";
+import { searchKnowledge } from "../api/rag/search";
 
 /** Tools bound to the page locale of one chat request. */
 export function createChatTools(locale: AppLocale) {

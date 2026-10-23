@@ -1,4 +1,4 @@
-export { submitReview } from "./actions";
+export { submitReview } from "./api/submit-review";
 export { BentoGallery } from "./components/BentoGallery";
 export { BlogGrid } from "./components/blog-grid";
 export { BlogImage } from "./components/blog-image";
@@ -10,8 +10,8 @@ export {
   getPublishedPosts,
   getPublishedSlugs,
   getSitemapPosts,
-} from "./lib/posts";
-export { getApprovedReviews } from "./lib/reviews";
+} from "./api/posts";
+export { getApprovedReviews } from "./api/reviews";
 export {
   initialSubmitReviewState,
   REVIEW_COMMENT_MAX,

@@ -1,4 +1,4 @@
-import type { CartQuote } from "./quote";
+import type { CartQuote } from "../api/quote";
 import type { CartItemInput } from "./types";
 
 /** Calls POST /api/cart/quote. Returns null on any failure. */

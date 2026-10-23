@@ -1,9 +1,9 @@
 import "server-only";
 import { routing, type AppLocale } from "@/i18n/routing";
-import { summarizeCart, type CartSummaryResult } from "./summary";
-import type { CartItemInput, LiveProduct } from "./types";
+import { summarizeCart, type CartSummaryResult } from "../lib/summary";
+import type { CartItemInput, LiveProduct } from "../lib/types";
 import { getCoverUrl } from "@/lib/media";
-import { getPublicSupabase } from "@/lib/supabase/public";
+import { createStaticClient } from "@/lib/supabase/server";
 
 export type CartQuoteLine = CartSummaryResult["lines"][number] & {
   product: LiveProduct | null;
@@ -27,7 +27,7 @@ export async function quoteCart(
   for (const item of items) products[item.postId] = null;
 
   if (items.length > 0) {
-    const { data, error } = await getPublicSupabase()
+    const { data, error } = await createStaticClient()
       .from("posts")
       .select(
         `id, slug, status, price_vnd, stock, product_status, cover_image_url,

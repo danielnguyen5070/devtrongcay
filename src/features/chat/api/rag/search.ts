@@ -8,8 +8,8 @@ import {
   MIN_LOCALE_HITS,
 } from "./config";
 import { embedQuery, toVectorLiteral } from "./embeddings";
-import { getAdminSupabase } from "@/lib/supabase/admin";
-import type { Database } from "@/types/database";
+import { createAdminClient } from "@/lib/supabase/admin";
+import type { Database } from "@/lib/supabase/database.types";
 
 type MatchRow = Database["public"]["Functions"]["match_document_chunks"]["Returns"][number];
 
@@ -35,7 +35,7 @@ type MatchOptions = {
 };
 
 async function match(embedding: string, options: MatchOptions): Promise<MatchRow[]> {
-  const { data, error } = await getAdminSupabase().rpc("match_document_chunks", {
+  const { data, error } = await createAdminClient().rpc("match_document_chunks", {
     query_embedding: embedding,
     match_count: options.count,
     match_threshold: options.threshold,

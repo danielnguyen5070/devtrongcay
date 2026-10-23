@@ -1,7 +1,7 @@
 import { SOCIAL_LINKS } from "@/lib/social";
 import { calculateShippingFee } from "@/lib/pricing";
 import { SITE_LOGO_PATH, SITE_NAME, absoluteUrl, siteNameFor } from "@/lib/site";
-import type { BlogPost, BlogPostMeta, PostReviewSummary } from "@/features/blog";
+import type { BlogPost, BlogPostMeta, PostReviewSummary } from "@/features/plants";
 
 type JsonLdNode = Record<string, unknown>;
 

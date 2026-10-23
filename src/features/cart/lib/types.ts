@@ -1,4 +1,4 @@
-import type { Database } from "@/types/database";
+import type { Database } from "@/lib/supabase/database.types";
 
 export const MAX_ITEM_QUANTITY = 10;
 export const MAX_CART_LINES = 50;

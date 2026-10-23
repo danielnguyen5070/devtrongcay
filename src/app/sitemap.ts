@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { routing, type AppLocale } from "@/i18n/routing";
-import { getSitemapPosts } from "@/features/blog";
+import { getSitemapPosts } from "@/features/plants";
 import { getSiteUrl, isNoIndexSite } from "@/lib/site";
 
 export const revalidate = 3600;

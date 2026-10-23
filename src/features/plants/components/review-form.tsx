@@ -2,7 +2,7 @@
 
 import { startTransition, useActionState, useState, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { submitReview } from "../actions";
+import { submitReview } from "../api/submit-review";
 import {
   REVIEW_COMMENT_MAX,
   REVIEW_NAME_MAX,

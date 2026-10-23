@@ -2,7 +2,7 @@
 
 import { startTransition, useActionState, useEffect, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { placeOrder } from "../checkout-actions";
+import { placeOrder } from "../api/place-order";
 import { initialPlaceOrderState, type CheckoutField } from "../checkout-state";
 import { Link } from "@/i18n/navigation";
 import { useCartStore } from "../lib/store";

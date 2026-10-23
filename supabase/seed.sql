@@ -1,0 +1,4 @@
+-- Local seed for `supabase db reset` only.
+-- Does NOT run on `supabase db push` or production deploys.
+-- Intentionally empty / non-destructive: no TRUNCATE, DELETE, or DROP.
+-- Content is managed in the Supabase Dashboard (or future idempotent inserts).

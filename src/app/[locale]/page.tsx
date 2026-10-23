@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { BlogGrid, getPublishedPosts } from "@/features/blog";
+import { BlogGrid, getPublishedPosts } from "@/features/plants";
 import { JsonLd } from "@/components/json-ld";
 import { routing } from "@/i18n/routing";
 import { graph, postList } from "@/lib/seo/json-ld";

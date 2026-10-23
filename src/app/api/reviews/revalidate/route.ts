@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { routing } from "@/i18n/routing";
-import { getAdminSupabase } from "@/lib/supabase/admin";
+import { createStaticClient } from "@/lib/supabase/server";
 import { isAuthorized } from "@/lib/webhook-auth";
 
 const NO_STORE = { "Cache-Control": "no-store" };
@@ -46,7 +46,8 @@ export async function POST(request: Request) {
   }
 
   const postIds = [...new Set(rows.map((row) => row.post_id))];
-  const { data, error } = await getAdminSupabase()
+  // Published posts are readable under RLS; no service-role needed.
+  const { data, error } = await createStaticClient()
     .from("posts")
     .select("slug")
     .in("id", postIds);

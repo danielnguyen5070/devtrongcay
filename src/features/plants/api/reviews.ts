@@ -1,12 +1,12 @@
 import "server-only";
 import { cache } from "react";
-import { getPublicSupabase } from "@/lib/supabase/public";
+import { createStaticClient } from "@/lib/supabase/server";
 import type { PostReviewSummary } from "../types";
 
 /** Approved reviews of a published post, from every locale, newest first. */
 export const getApprovedReviews = cache(
   async (postId: string): Promise<PostReviewSummary> => {
-    const { data, error } = await getPublicSupabase()
+    const { data, error } = await createStaticClient()
       .from("post_reviews")
       .select("id, author_name, rating, comment, created_at")
       .eq("post_id", postId)

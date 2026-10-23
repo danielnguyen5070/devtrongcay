@@ -4,7 +4,7 @@ import { isSellable, type LiveProduct } from "@/features/cart";
 import { getCoverUrl } from "@/lib/media";
 import { formatVnd } from "@/lib/pricing";
 import { findPostIdsByName } from "./rag/search";
-import { getPublicSupabase } from "@/lib/supabase/public";
+import { createStaticClient } from "@/lib/supabase/server";
 
 export type ProductInfo = {
   title: string;
@@ -29,7 +29,7 @@ function escapeLike(value: string) {
 }
 
 async function findIdsByTitle(name: string): Promise<string[]> {
-  const { data, error } = await getPublicSupabase()
+  const { data, error } = await createStaticClient()
     .from("post_translations")
     .select("post_id")
     .ilike("title", `%${escapeLike(name)}%`)
@@ -51,7 +51,7 @@ export async function findProducts(name: string, locale: AppLocale): Promise<Pro
   if (ids.length === 0) ids = await findPostIdsByName(query, MAX_RESULTS);
   if (ids.length === 0) return [];
 
-  const { data, error } = await getPublicSupabase()
+  const { data, error } = await createStaticClient()
     .from("posts")
     .select(
       `id, slug, status, price_vnd, stock, product_status, cover_image_url,
