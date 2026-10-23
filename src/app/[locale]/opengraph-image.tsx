@@ -1,4 +1,4 @@
-import { renderSiteImage, siteImageMetadata } from "@/lib/og-image";
+import { renderSiteImage, siteImageMetadata } from "@/lib/seo/og-image";
 
 export function generateImageMetadata({ params }: { params: { locale: string } }) {
   return siteImageMetadata(params.locale);
