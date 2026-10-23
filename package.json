@@ -9,7 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "db:push": "supabase db push",
-    "db:types": "supabase gen types typescript --linked --schema public > types/database.ts",
+    "db:types": "supabase gen types typescript --linked --schema public > src/types/database.ts",
     "rag:index": "node --env-file=.env.local --conditions=react-server --import tsx scripts/rag-index.ts",
     "rag:eval": "node --env-file=.env.local --conditions=react-server --import tsx scripts/rag-eval.ts"
   },
