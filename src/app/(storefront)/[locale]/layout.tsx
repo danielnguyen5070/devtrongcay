@@ -19,7 +19,7 @@ import {
   isNoIndexSite,
   siteNameFor,
 } from "@/lib/site";
-import "../globals.css";
+import "../../globals.css";
 
 type Props = {
   children: React.ReactNode;

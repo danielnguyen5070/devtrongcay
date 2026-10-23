@@ -501,6 +501,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin: { Args: never; Returns: boolean }
       match_document_chunks: {
         Args: {
           filter_category_ids?: string[]
