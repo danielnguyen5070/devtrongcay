@@ -1,5 +1,5 @@
 /**
- * Retrieval quality check for tuning MATCH_THRESHOLD in lib/rag/config.ts.
+ * Retrieval quality check for tuning MATCH_THRESHOLD in features/chat/lib/rag/config.ts.
  * Needs an indexed database, SUPABASE_SECRET_KEY and OPENAI_API_KEY.
  *
  *   npm run rag:eval
